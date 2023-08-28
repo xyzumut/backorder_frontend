@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Layout, Menu } from 'antd';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Homepage, DataPage, MailPage, NetSearchPage } from './Pages/pages';
+import { HomeOutlined, MailOutlined, SearchOutlined } from '@ant-design/icons';
 
-function App() {
+const App = () => {
+  const navigate = useNavigate();
+  const { Content, Sider } = Layout;
+  const [ pageIndex, setPageIndex ] = React.useState( 1 )
+
+  const pages = [
+    { name:'anasayfa', viewName:'Ana Sayfa'         , icon:HomeOutlined  , key:1 },
+    { name:'mail'    , viewName:'Mail Ayarları'     , icon:MailOutlined  , key:2 },
+    { name:'internet', viewName:'İnternet Ayarları' , icon:SearchOutlined, key:3 },
+  ]
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout style={{ height: '100vh' }}>
+      <Sider theme='dark'>
+        <h3 style={{ width:'100%', height:40, textAlign:'left', color:'rgba(255, 255, 255, 0.65)', paddingLeft:30, margin:'20px 0 0 0' }}> Sekmeler </h3>
+        <Menu
+          theme='dark'
+          mode="inline"
+          defaultSelectedKeys={ [ (pageIndex).toString() ] }
+          items={ pages.map(
+            ( page ) => ({
+              key     : page.key,
+              label   : page.viewName,
+              icon    : React.createElement( page.icon ),
+              onClick : () => {
+                setPageIndex( page.key );
+                navigate( '/'+page.name );
+              },
+            })
+          )}
+        />
+      </Sider>
+      <Layout>
+        <Content>
+          <Routes>
+            <Route path="/"           element={<Homepage/>}      />
+            <Route path="/anasayfa"   element={<Homepage/>}      />
+            <Route path="/mail"       element={<MailPage/>}      />
+            <Route path="/kayit"      element={<DataPage/>}      />
+            <Route path="/internet"   element={<NetSearchPage/>} />
+          </Routes>
+        </Content>
+      </Layout>
+    </Layout>
   );
-}
-
+};
 export default App;
