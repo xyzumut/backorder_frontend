@@ -2,8 +2,14 @@ import React  from 'react';
 import { Badge, Table, Button, Popover } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
+import { deleteInfoAPI } from '../../../services';
 
 const TableComponent = ( { selected, setSelected, domains, loading, query, setQuery, initialQuery } ) => {
+
+    const deleteInfo = async ( id ) => {
+        const deleteRequest = await deleteInfoAPI( '/information/delete/'+id );
+        console.log( ' Silme isteği sonucu : ', deleteRequest );
+    }
 
     const expandableColumns = {
 
@@ -13,10 +19,8 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
             { 
                 title:'#', 
                 key:'action', 
-                width:50, 
-                render:() => {
-                    return( <Button loading = { false } danger icon={ <DeleteOutlined/> } /> ) 
-                } 
+                width:50,
+                render:( value ) => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value.id ) } }/> ) } 
             }
         ],
         mailColumn : [
@@ -26,7 +30,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
                 title:'#', 
                 key:'action', 
                 width:50,
-                render:( value ) => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => {  } }/> ) } 
+                render:( value ) => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value.id ) } }/> ) } 
             }
         ],
         telColumn: [
@@ -35,8 +39,8 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
             { 
                 title:'#', 
                 key:'action', 
-                width:50, 
-                render:() => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } /> ) } 
+                width:50,
+                render:( value ) => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value.id ) } }/> ) } 
             }
         ]
     }
