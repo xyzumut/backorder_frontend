@@ -5,7 +5,7 @@ import { Input, Space } from 'antd';
 // eslint-disable-next-line
 const { Search } = Input;
 
-const SearchComponent = ( { searchState, setSearchState, width, loading } ) => {
+const SearchComponent = ( { searchState, setSearchState, width, loading, style } ) => {
 
 
     const handleChange = (e) => {
@@ -24,7 +24,7 @@ const SearchComponent = ( { searchState, setSearchState, width, loading } ) => {
     });
 
     return (
-        <Space.Compact style={ { width:width || 250 } }>
+        <Space.Compact style={ { width:width || 250, ...style } }>
             {/* <Search onChange={debouncedResults} placeholder="Domain ara" allowClear/> */}
             <Input onChange={debouncedResults} placeholder="Domain ara" allowClear addonAfter={ <SearchOutlined/> } disabled={ loading }/>
         </Space.Compact>

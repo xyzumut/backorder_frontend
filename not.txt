@@ -1,0 +1,8 @@
+tablo sayfasında:
+
+- sayfalama olacak
+- aksiyonlar olacak
+- onaylıları getir-onaysızları getir, kuyruktakileri getir-kontrol edilenleri getir filtreleri olacak
+- toplu işlemler kısmı olacak
+- debounce arama olacak
+- float button ile yeni domain kaydı ekleme olacak

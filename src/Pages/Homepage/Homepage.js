@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import React from "react";
 import TableComponent from "./homepage-components/TableComponent";
 import SearchComponent from "./homepage-components/SearchComponent";
+import SelectFilterComponent from "./homepage-components/SelectFilterComponent";
+import SelectActionComponent from "./homepage-components/SelectActionComponent";
 
 const Homepage = () => {
 
@@ -28,16 +30,24 @@ const Homepage = () => {
         { key:20, domain: 'netflix.com',       dropdate: '2023-10-30', status:false }
     ];
 
-    const [ data, setData ]             = React.useState( initialdata ); // genel datayı tuttuğum state
-    const [ selected, setSelected ]     = React.useState( {} ); // seçilen satırları tuttuğum state
-    const [ searchText, setSearchText ] = React.useState( '' ); // Domain ismi ile arama yaparken kullandığım state
-    const [ loading, setLoading ]       = React.useState( false ); // verilerin gelip gelmediğinin loaderi
+    const [ data, setData ]                 = React.useState( initialdata ); // genel datayı tuttuğum state
+    const [ selected, setSelected ]         = React.useState( {} ); // seçilen satırları tuttuğum state
+    const [ searchText, setSearchText ]     = React.useState( '' ); // Domain ismi ile arama yaparken kullandığım state
+    const [ loading, setLoading ]           = React.useState( false ); // verilerin gelip gelmediğinin loaderi
+    const [ optionFilter, setOptionFilter ] = React.useState( '0' );
+    const [ selectActionState, setSelectActionState ] = React.useState( '' );
 
     return (
-        <motion.div initial = {{ opacity:0, translateY:100 }} animate = {{ opacity:1, translateY:0 }} > 
-            <div style={{ width:1000 }}>
-                <SearchComponent width={ '100%' } searchState={ searchText } setSearchState={ setSearchText } loading={ loading } />
-                <TableComponent selected={ selected } setSelected={ setSelected } data={ data } loading={ loading } />
+        <motion.div initial = {{ opacity:0 }} animate = {{ opacity:1 }} style = {{ display:'flex', width:'100%', height:'100vh', justifyContent:'center', alignItems:'flex-start' }}> 
+            <div>
+                <div style = {{ width:1200, display:'flex', flexDirection:'column' }} >
+                    <div style = {{ width:1200, display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
+                        <SelectFilterComponent loading = { loading } optionFilter = { optionFilter }           setOptionFilter = { setOptionFilter } />
+                        <SelectActionComponent loading = { loading } selectActionState = { selectActionState } setSelectActionState = { setSelectActionState } />
+                    </div>
+                    <SearchComponent loading = { loading } searchState = { searchText } setSearchState = { setSearchText }  width = { '100%' } style = {{ marginBottom:20 }} />
+                    <TableComponent  loading = { loading } selected = { selected }      setSelected = { setSelected }       data = { data } />
+                </div>
             </div>
         </motion.div>
     );

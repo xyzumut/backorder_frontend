@@ -5,6 +5,42 @@ import { NavLink } from 'react-router-dom';
 
 const TableComponent = ( { selected, setSelected, data, loading } ) => {
     
+    const expandableColumns = {
+
+        socialColumn: [
+            { title:'Sosyal Medya', dataIndex:'social'},
+            { title:'Kaynak', dataIndex:'src' },
+            { 
+                title:'#', 
+                key:'action', 
+                width:50, 
+                render:() => {
+                    return( <Button loading = { false } danger icon={ <DeleteOutlined/> } /> ) 
+                } 
+            }
+        ],
+        mailColumn : [
+            { title:'Mail', dataIndex:'mail' },
+            { title:'Kaynak', dataIndex:'src' }, 
+            { 
+                title:'#', 
+                key:'action', 
+                width:50,
+                render:( value ) => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => {  } }/> ) } 
+            }
+        ],
+        telColumn: [
+            { title:'Telefon Numarası', dataIndex:'tel'},
+            { title:'Kaynak', dataIndex:'src' }, 
+            { 
+                title:'#', 
+                key:'action', 
+                width:50, 
+                render:() => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } /> ) } 
+            }
+        ]
+    }
+
     const defaultExpandable = {
         expandedRowRender: ( record ) => {
             return (
@@ -15,27 +51,27 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
                         bordered = { true }
                         size = 'small'
                         pagination = { false } 
-                        style = { { width : '25%' } }
-                        columns = { [ { title:'Sosyal Medya', dataIndex:'social', width:'75%' }, { title:'#', key:'action', width:'25%', render:() => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } /> ) } } ] }
-                        dataSource = { [ { key:1, social:record.domain+'instagram' }, { key:2, social:record.domain+'facebook' }, { key:3, social:record.domain+'twitter' } ] }
+                        style = { { width : '30%' } }
+                        columns = { expandableColumns.socialColumn }
+                        dataSource = { [ { key:1, social:record.domain+'instagram', src:'KaynakDomain' }, { key:2, social:record.domain+'facebook', src:'KaynakDomain' }, { key:3, social:record.domain+'twitter', src:'KaynakDomain' } ] }
                     />
                     <Table
                         scroll={ { y:200 } }
                         bordered = { true }
                         size = 'small'
                         pagination = { false } 
-                        style = { { width : '45%' } }
-                        columns = { [ { title:'Mail', dataIndex:'mail' }, { title:'#', dataIndex:'action' } ] }
-                        dataSource = { [ { key:1, mail:record.domain+'mail1' }, { key:2, mail:record.domain+'mail2' }, { key:3, mail:record.domain+'mail3' } ] }
+                        style = { { width : '35%' } }
+                        columns = { expandableColumns.mailColumn }
+                        dataSource = { [ { key:1, mail:record.domain+'mail1', src:'KaynakDomain' }, { key:2, mail:record.domain+'mail2', src:'KaynakDomain' }, { key:3, mail:record.domain+'mail3', src:'KaynakDomain' } ] }
                     />
                     <Table
                         scroll={ { y:200 } }
                         bordered = { true }
                         size = 'small'
                         pagination = { false } 
-                        style = { { width : '25%' } }
-                        columns = { [ { title:'Telefon Numarası', dataIndex:'tel', width:'75%' }, { title:'#', key:'action', width:'25%', render:() => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } /> ) } } ] }
-                        dataSource = { [ { key:1, tel:record.domain+'tel1' }, { key:2, tel:record.domain+'tel2' }, { key:3, tel:record.domain+'tel3' }, { key:4, tel:record.domain+'tel4' }, { key:5, tel:record.domain+'tel5' } ] }
+                        style = { { width : '30%' } }
+                        columns = { expandableColumns.telColumn }
+                        dataSource = { [ { key:1, tel:record.domain+'tel1', src:'KaynakDomain' }, { key:2, tel:record.domain+'tel2', src:'KaynakDomain' }, { key:3, tel:record.domain+'tel3', src:'KaynakDomain' }, { key:4, tel:record.domain+'tel4', src:'KaynakDomain' }, { key:5, tel:record.domain+'tel5', src:'KaynakDomain' } ] }
                     />
                 </div>
             )
@@ -148,8 +184,8 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
             dataSource={ data }
             rowSelection={ rowSelection }
             loading = { loading }
-            style={ { width:1000 } }
-            scroll={ { y:700 } }
+            style={ { width:1200 } }
+            scroll={ { y:600 } }
             size='medium'
         />
         
