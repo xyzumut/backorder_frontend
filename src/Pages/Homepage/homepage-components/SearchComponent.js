@@ -5,7 +5,7 @@ import { Input, Space } from 'antd';
 // eslint-disable-next-line
 const { Search } = Input;
 
-const SearchComponent = ( { searchState, setSearchState, width, loading, style } ) => {
+const SearchComponent = ( { searchState, setSearchState, width, loading, style, query, setQuery, initialQuery } ) => {
 
 
     const handleChange = (e) => {
@@ -17,7 +17,7 @@ const SearchComponent = ( { searchState, setSearchState, width, loading, style }
     }, [handleChange]);
     
     useEffect(() => {
-        console.log( 'Değer : ', searchState );
+        // console.log( 'Değer : ', searchState );
         return () => {
           debouncedResults.cancel();
         };

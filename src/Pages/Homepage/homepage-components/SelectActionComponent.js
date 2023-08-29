@@ -1,7 +1,7 @@
 import { Select, Button } from "antd";
 import React from "react";
 
-const SelectActionComponent = ( { selectActionState, setSelectActionState } ) => {
+const SelectActionComponent = ( { selectActionState, setSelectActionState, query, setQuery, initialQuery  } ) => {
 
     const options = [
         { value: 'sil'       , label: 'Sil' },

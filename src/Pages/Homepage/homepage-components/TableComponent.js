@@ -3,13 +3,15 @@ import { Badge, Table, Button, Popover } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
 
-const TableComponent = ( { selected, setSelected, data, loading } ) => {
-    
+const TableComponent = ( { selected, setSelected, data, loading, query, setQuery, initialQuery } ) => {
+
+
+
     const expandableColumns = {
 
         socialColumn: [
-            { title:'Sosyal Medya', dataIndex:'social'},
-            { title:'Kaynak', dataIndex:'src' },
+            { title:'Sosyal Medya', dataIndex:'info'},
+            { title:'Kaynak', dataIndex:'source' },
             { 
                 title:'#', 
                 key:'action', 
@@ -20,8 +22,8 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
             }
         ],
         mailColumn : [
-            { title:'Mail', dataIndex:'mail' },
-            { title:'Kaynak', dataIndex:'src' }, 
+            { title:'Mail', dataIndex:'info' },
+            { title:'Kaynak', dataIndex:'source' }, 
             { 
                 title:'#', 
                 key:'action', 
@@ -30,8 +32,8 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
             }
         ],
         telColumn: [
-            { title:'Telefon Numarası', dataIndex:'tel'},
-            { title:'Kaynak', dataIndex:'src' }, 
+            { title:'Telefon Numarası', dataIndex:'info'},
+            { title:'Kaynak', dataIndex:'source' }, 
             { 
                 title:'#', 
                 key:'action', 
@@ -53,7 +55,7 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
                         pagination = { false } 
                         style = { { width : '30%' } }
                         columns = { expandableColumns.socialColumn }
-                        dataSource = { [ { key:1, social:record.domain+'instagram', src:'KaynakDomain' }, { key:2, social:record.domain+'facebook', src:'KaynakDomain' }, { key:3, social:record.domain+'twitter', src:'KaynakDomain' } ] }
+                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'social_link' ).map( item => { return { key:item.id, ...item  } } )  }
                     />
                     <Table
                         scroll={ { y:200 } }
@@ -62,7 +64,7 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
                         pagination = { false } 
                         style = { { width : '35%' } }
                         columns = { expandableColumns.mailColumn }
-                        dataSource = { [ { key:1, mail:record.domain+'mail1', src:'KaynakDomain' }, { key:2, mail:record.domain+'mail2', src:'KaynakDomain' }, { key:3, mail:record.domain+'mail3', src:'KaynakDomain' } ] }
+                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'mail' ).map( item => { return { key:item.id, ...item  } } )  }
                     />
                     <Table
                         scroll={ { y:200 } }
@@ -71,7 +73,7 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
                         pagination = { false } 
                         style = { { width : '30%' } }
                         columns = { expandableColumns.telColumn }
-                        dataSource = { [ { key:1, tel:record.domain+'tel1', src:'KaynakDomain' }, { key:2, tel:record.domain+'tel2', src:'KaynakDomain' }, { key:3, tel:record.domain+'tel3', src:'KaynakDomain' }, { key:4, tel:record.domain+'tel4', src:'KaynakDomain' }, { key:5, tel:record.domain+'tel5', src:'KaynakDomain' } ] }
+                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'tel' ).map( item => { return { key:item.id, ...item  } } )  }
                     />
                 </div>
             )
@@ -79,13 +81,13 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
     };
 
     // eslint-disable-next-line
-    const [expandable, setExpandable] = React.useState(defaultExpandable);
+    const [expandable, setExpandable] = React.useState( defaultExpandable );
 
     const columns = [
         {
             title: 'ID',
             dataIndex: 'key',
-            width:50,
+            width:100,
             align:'center',
         },
         {
@@ -101,7 +103,7 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
             title: () => <span onClick={ () => {
                 console.log( 'düşüş tarihi sıralama isteği atıldı' )
             } }>Düşüş tarihi</span>,
-            dataIndex: 'dropdate',
+            dataIndex: 'dropDate',
             width:150,
             align:'center'
         },
@@ -149,7 +151,6 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
         },
     ];
 
-
     React.useEffect( () => {
         console.log( selected )
     }, [selected] )
@@ -181,7 +182,7 @@ const TableComponent = ( { selected, setSelected, data, loading } ) => {
             bordered = { true }                
             expandable = { expandable } 
             columns={ columns }
-            dataSource={ data }
+            dataSource={ data.domains || [] }
             rowSelection={ rowSelection }
             loading = { loading }
             style={ { width:1200 } }

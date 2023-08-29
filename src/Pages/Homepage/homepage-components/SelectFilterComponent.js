@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from 'antd';
 
-const SelectFilterComponent = ( { optionFilter, setOptionFilter, loading } ) => {
+const SelectFilterComponent = ( { optionFilter, setOptionFilter, loading, query, setQuery, initialQuery  } ) => {
 
     const [ width, setWidth ] = React.useState( 400 )
     const options = [
