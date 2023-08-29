@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from 'antd';
 
-const SelectFilterComponent = ( { optionFilter, setOptionFilter, loading, query, setQuery, initialQuery  } ) => {
+const SelectFilterComponent = ( { query, setQuery } ) => {
 
     const [ width, setWidth ] = React.useState( 400 )
     const options = [
@@ -12,16 +12,20 @@ const SelectFilterComponent = ( { optionFilter, setOptionFilter, loading, query,
     ];
 
     const handleChange = ( value ) => {
-        if ( value.length === 4 ) {
+        if ( value.length > 3 ) {
             setWidth( 700 );
         }
-        else if( value.length === 3 ){
+        else if( value.length > 2 ){
             setWidth( 550 );
         }
         else{
             setWidth( 400 );
         }
-        setOptionFilter( value );
+        let filterValue = 0;
+        value.forEach( val => {
+            filterValue = filterValue + Number( val );
+        });
+        setQuery( { ...query, filter:filterValue } );
     }
 
     return <Select
@@ -32,7 +36,7 @@ const SelectFilterComponent = ( { optionFilter, setOptionFilter, loading, query,
         placeholder='Filtreler'
         onChange={ handleChange }
         options={ options }
-        loading = { loading }
+        allowClear
     />
 };
 export default SelectFilterComponent;

@@ -1,8 +1,16 @@
-tablo sayfasında:
+Tablo sayfası kalanlar:
 
-- sayfalama olacak
-- aksiyonlar olacak
-- onaylıları getir-onaysızları getir, kuyruktakileri getir-kontrol edilenleri getir filtreleri olacak
-- toplu işlemler kısmı olacak
-- debounce arama olacak
-- float button ile yeni domain kaydı ekleme olacak
+    - Front end :
+        > datepicker eklenecek
+        > alt tablolarda kaynaklara yeni sekmede bağlantı oluşturulacak
+        > alt tablolarda silme işlemi için endpoint oluşturulacak
+        > notifiaction eklenecek
+        > floating button + popup aracılığı ile yeni domain ekleme formu halledilecek
+    - Back end :
+        > tarihe göre aralık filtrelemenin endpointi yazılacak
+        > toplu işlemlerin endpointi yazılacak
+        > domain onayla end pointi yazılacak
+        > Sıraya al end pointi yazılacak
+        > domain sil end pointi yazılacak
+        > infoların silme bağlantısı oluşturulacak
+        > yeni domain eklemek için endpoint yazılacak

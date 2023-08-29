@@ -5,8 +5,6 @@ import { NavLink } from 'react-router-dom';
 
 const TableComponent = ( { selected, setSelected, data, loading, query, setQuery, initialQuery } ) => {
 
-
-
     const expandableColumns = {
 
         socialColumn: [
@@ -155,9 +153,6 @@ const TableComponent = ( { selected, setSelected, data, loading, query, setQuery
         console.log( selected )
     }, [selected] )
 
-    const [ page, setPage ] = React.useState(1);
-    const [ pageSize, setPageSize ] = React.useState(10);
-
     const rowSelection = {
         onChange: ( selectedRowKeys, selectedRows ) => {
             setSelected( selectedRows )
@@ -166,17 +161,16 @@ const TableComponent = ( { selected, setSelected, data, loading, query, setQuery
             domain: record.domain, // bunun ne işe yaradığını anlamadım
         }),
     };
-
     return (
         <Table
             pagination = {{
+                total: data && data.meta && data.meta.filteredDataCount ? data.meta.filteredDataCount : 0, 
                 position: [ 'none' , 'bottomRight' ],
-                current:page,
-                pageSize:20,
+                current:query.page,
+                pageSize:query.pagePerSize,
                 onChange: ( page, pageSize ) => {
-                    setPage( page )
-                    setPageSize( pageSize )
-                    console.log( page, pageSize )
+                    setQuery( { ...query, page:page, pagePerSize:pageSize } );
+                    console.log( 'girdi' );
                 }
             }}
             bordered = { true }                

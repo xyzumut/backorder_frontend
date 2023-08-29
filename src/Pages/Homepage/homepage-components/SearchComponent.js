@@ -1,34 +1,31 @@
-import React, { useMemo, useEffect } from 'react';
-import debouce from "lodash.debounce";
+import React from 'react';
+import debounce from "lodash.debounce"; // Doğru import edildiğinden emin olun
 import { SearchOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
-// eslint-disable-next-line
-const { Search } = Input;
 
-const SearchComponent = ( { searchState, setSearchState, width, loading, style, query, setQuery, initialQuery } ) => {
+const SearchComponent = ( { width, loading, style, query, setQuery, initialQuery } ) => {
 
+    const debouncedHandleChange = React.useMemo(() => {
+        return debounce((value) => {
+            setQuery( { ...query, search: value } );
+        }, 500);
+    }, [setQuery, query]);
 
-    const handleChange = (e) => {
-        setSearchState(e.target.value);
-    };
-    
-    const debouncedResults = useMemo(() => {
-        return debouce( handleChange, 500 );
-    }, [handleChange]);
-    
-    useEffect(() => {
-        // console.log( 'Değer : ', searchState );
+    React.useEffect(() => {
         return () => {
-          debouncedResults.cancel();
+            debouncedHandleChange.cancel();
         };
-    });
+    }, [debouncedHandleChange]);
+
+    const handleInputChange = (e) => {
+        debouncedHandleChange( e.target.value );
+    };
 
     return (
         <Space.Compact style={ { width:width || 250, ...style } }>
-            {/* <Search onChange={debouncedResults} placeholder="Domain ara" allowClear/> */}
-            <Input onChange={debouncedResults} placeholder="Domain ara" allowClear addonAfter={ <SearchOutlined/> } disabled={ loading }/>
+            <Input onChange={ handleInputChange } placeholder="Domain ara" allowClear addonAfter={ <SearchOutlined/> } disabled={ loading }/>
         </Space.Compact>
-    )
+    );
 }
 
 export default SearchComponent;
