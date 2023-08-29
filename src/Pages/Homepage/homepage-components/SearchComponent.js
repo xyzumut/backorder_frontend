@@ -7,7 +7,7 @@ const SearchComponent = ( { width, loading, style, query, setQuery, initialQuery
 
     const debouncedHandleChange = React.useMemo(() => {
         return debounce((value) => {
-            setQuery( { ...query, search: value } );
+            setQuery( { ...query, search: value, page:1 } );
         }, 500);
     }, [setQuery, query]);
 

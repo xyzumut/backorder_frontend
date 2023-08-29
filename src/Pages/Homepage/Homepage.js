@@ -40,7 +40,6 @@ const Homepage = () => {
             <div>
                 <div style = {{ width:1200, display:'flex', flexDirection:'column' }} >
                     <div style = {{ width:1200, display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
-                        <SelectFilterComponent query = { query } setQuery = { setQuery } />
                         <SelectActionComponent 
                             loading = { loading } query = { query } setQuery = { setQuery }  
                             selectActionState = { selectActionState } 
@@ -50,9 +49,10 @@ const Homepage = () => {
                                 console.log( 'Seçili satırlar : ', selected );
                             } } 
                         />
+                        <SelectFilterComponent query = { query } setQuery = { setQuery } />
                     </div>
                     <SearchComponent loading = { false }   query = { query } setQuery = { setQuery } initialQuery = { initialQuery } width = { '100%' } style = {{ marginBottom:20 }} />
-                    <TableComponent  loading = { loading } query = { query } setQuery = { setQuery } initialQuery = { initialQuery } selected = { selected }      setSelected = { setSelected }       data = { data } />
+                    <TableComponent  loading = { loading } query = { query } setQuery = { setQuery } initialQuery = { initialQuery } selected = { selected }      setSelected = { setSelected } domains = { data } />
                 </div>
             </div>
         </motion.div>

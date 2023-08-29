@@ -3,13 +3,13 @@ import { Badge, Table, Button, Popover } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
 
-const TableComponent = ( { selected, setSelected, data, loading, query, setQuery, initialQuery } ) => {
+const TableComponent = ( { selected, setSelected, domains, loading, query, setQuery, initialQuery } ) => {
 
     const expandableColumns = {
 
         socialColumn: [
             { title:'Sosyal Medya', dataIndex:'info'},
-            { title:'Kaynak', dataIndex:'source' },
+            { title:'Kaynak', key:'source', render: ( val ) => <a href={ '//'+val.source } target='_blank' > { val.source } </a> },
             { 
                 title:'#', 
                 key:'action', 
@@ -164,19 +164,18 @@ const TableComponent = ( { selected, setSelected, data, loading, query, setQuery
     return (
         <Table
             pagination = {{
-                total: data && data.meta && data.meta.filteredDataCount ? data.meta.filteredDataCount : 0, 
+                total: domains && domains.meta && domains.meta.filteredDataCount ? domains.meta.filteredDataCount : 0, 
                 position: [ 'none' , 'bottomRight' ],
                 current:query.page,
                 pageSize:query.pagePerSize,
                 onChange: ( page, pageSize ) => {
                     setQuery( { ...query, page:page, pagePerSize:pageSize } );
-                    console.log( 'girdi' );
                 }
             }}
             bordered = { true }                
             expandable = { expandable } 
             columns={ columns }
-            dataSource={ data.domains || [] }
+            dataSource={ domains.data || [] }
             rowSelection={ rowSelection }
             loading = { loading }
             style={ { width:1200 } }

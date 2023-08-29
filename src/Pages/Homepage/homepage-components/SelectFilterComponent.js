@@ -25,7 +25,7 @@ const SelectFilterComponent = ( { query, setQuery } ) => {
         value.forEach( val => {
             filterValue = filterValue + Number( val );
         });
-        setQuery( { ...query, filter:filterValue } );
+        setQuery( { ...query, filter:filterValue, page:1 } );
     }
 
     return <Select
