@@ -16,7 +16,7 @@ const SelectFilterComponent = ( ) => {
 
     const handleChange = ( value ) => {
         if ( value.length > 3 ) {
-            setWidth( 700 );
+            setWidth( 600 );
         }
         else if( value.length > 2 ){
             setWidth( 550 );

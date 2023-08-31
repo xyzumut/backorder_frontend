@@ -1,4 +1,4 @@
-import React, {useContext, createContext, useState, useEffect} from "react";
+import React, {useContext, createContext } from "react";
 
 const HomepageContext = createContext()
 const useHomePage = () => {return useContext(HomepageContext)}
@@ -10,7 +10,9 @@ const HomepageContextProvider = ({children}) => {
         pagePerSize:10,
         page:1,
         filter:0,
-        search:''
+        search:'',
+        startDate:'',
+        endDate:''
     }
 
     const [ query, setQuery ] = React.useState( initialQuery )

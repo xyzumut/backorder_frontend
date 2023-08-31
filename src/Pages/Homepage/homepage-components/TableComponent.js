@@ -141,6 +141,7 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                 render:( value ) => { return( <Button danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value ) } }/> ) } 
             }
         ]
+        
     }
 
     const defaultExpandable = {
@@ -275,12 +276,12 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             }}
             bordered = { true }                
             expandable = { expandable } 
-            columns={ columns }
-            dataSource={ data || [] }
-            rowSelection={ rowSelection }
+            columns = { columns }
+            dataSource = { data || [] }
+            rowSelection = { rowSelection }
             loading = { loading }
-            style={ { width:1200 } }
-            scroll={ { y:600 } }
+            style = { { width:1200 } }
+            scroll = { { y:600 } }
             size='medium'
         />
         

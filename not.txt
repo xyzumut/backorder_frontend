@@ -1,7 +1,6 @@
 Tablo sayfası kalanlar:
 
     - toplu işlemler kısmı yazılacak
-    - tarih aralığına göre filtrelemenin front end ve back end'i yazılacak
     - sıralama işlemleri yapılacak
 
 Sorunlar:
