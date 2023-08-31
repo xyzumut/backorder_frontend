@@ -1,7 +1,10 @@
 import React from 'react';
 import { Select } from 'antd';
+import { useHomePage } from '../../../context/homepage-context';
 
-const SelectFilterComponent = ( { query, setQuery } ) => {
+const SelectFilterComponent = ( ) => {
+
+    const { query, setQuery,} = useHomePage(); 
 
     const [ width, setWidth ] = React.useState( 400 )
     const options = [
