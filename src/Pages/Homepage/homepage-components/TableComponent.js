@@ -1,14 +1,32 @@
-import React  from 'react';
+import React, { useEffect } from 'react';
 import { Badge, Table, Button, Popover } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
 import { deleteInfoAPI } from '../../../services';
+import { useHomePage } from '../../../context/homepage-context';
 
-const TableComponent = ( { selected, setSelected, domains, loading, query, setQuery, initialQuery } ) => {
+const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
+    
+    const { data, setData, query, setQuery, meta, setMeta, initialQuery } = useHomePage()
 
-    const deleteInfo = async ( id ) => {
-        const deleteRequest = await deleteInfoAPI( '/information/delete/'+id );
-        console.log( ' Silme isteği sonucu : ', deleteRequest );
+    const deleteInfo = async ( value ) => {
+        const deleteRequest = await deleteInfoAPI( '/information/delete/'+value.id );
+        setLoading( true );
+        if( deleteRequest.status ) {
+            const newInfos = data.find( item => item.key === value.parent ).infos.filter( item => item.id !== value.key );
+            setData( data.map( item => {
+                if ( item.key === value.parent ) {
+                    item.infos = newInfos;
+                }
+                return item;
+            } ) )
+            alert( 'silme işlemi başarılı' )
+            // TODO başarılı uyarısı
+        }
+        else{
+            // TODO başarısız uyarısı
+        }
+        setLoading( false );
     }
 
     const expandableColumns = {
@@ -20,7 +38,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
                 title:'#', 
                 key:'action', 
                 width:50,
-                render:( value ) => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value.id ) } }/> ) } 
+                render:( value ) => { return( <Button danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value ) } }/> ) } 
             }
         ],
         mailColumn : [
@@ -30,7 +48,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
                 title:'#', 
                 key:'action', 
                 width:50,
-                render:( value ) => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value.id ) } }/> ) } 
+                render:( value ) => { return( <Button danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value ) } }/> ) } 
             }
         ],
         telColumn: [
@@ -40,7 +58,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
                 title:'#', 
                 key:'action', 
                 width:50,
-                render:( value ) => { return( <Button loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value.id ) } }/> ) } 
+                render:( value ) => { return( <Button danger icon={ <DeleteOutlined/> } onClick={ () => { deleteInfo( value ) } }/> ) } 
             }
         ]
     }
@@ -57,7 +75,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
                         pagination = { false } 
                         style = { { width : '30%' } }
                         columns = { expandableColumns.socialColumn }
-                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'social_link' ).map( item => { return { key:item.id, ...item  } } )  }
+                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'social_link' ).map( item => { return { parent:record.key, key:item.id, ...item, } } )  }
                     />
                     <Table
                         scroll={ { y:200 } }
@@ -66,7 +84,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
                         pagination = { false } 
                         style = { { width : '35%' } }
                         columns = { expandableColumns.mailColumn }
-                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'mail' ).map( item => { return { key:item.id, ...item  } } )  }
+                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'mail' ).map( item => { return { parent:record.key, key:item.id, ...item  } } )  }
                     />
                     <Table
                         scroll={ { y:200 } }
@@ -75,7 +93,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
                         pagination = { false } 
                         style = { { width : '30%' } }
                         columns = { expandableColumns.telColumn }
-                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'tel' ).map( item => { return { key:item.id, ...item  } } )  }
+                        dataSource = { !( record.infos.length > 0 ) ? [] : record.infos.filter( item => item.type === 'tel' ).map( item => { return { parent:record.key, key:item.id, ...item  } } )  }
                     />
                 </div>
             )
@@ -154,7 +172,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
     ];
 
     React.useEffect( () => {
-        console.log( selected )
+
     }, [selected] )
 
     const rowSelection = {
@@ -162,13 +180,14 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
             setSelected( selectedRows )
         },
         getCheckboxProps: (record) => ({
-            domain: record.domain, // bunun ne işe yaradığını anlamadım
+            domain: record, // bunun ne işe yaradığını anlamadım
         }),
     };
+
     return (
         <Table
             pagination = {{
-                total: domains && domains.meta && domains.meta.filteredDataCount ? domains.meta.filteredDataCount : 0, 
+                total: meta && meta.filteredDataCount ? meta.filteredDataCount : 0, 
                 position: [ 'none' , 'bottomRight' ],
                 current:query.page,
                 pageSize:query.pagePerSize,
@@ -179,7 +198,7 @@ const TableComponent = ( { selected, setSelected, domains, loading, query, setQu
             bordered = { true }                
             expandable = { expandable } 
             columns={ columns }
-            dataSource={ domains.data || [] }
+            dataSource={ data || [] }
             rowSelection={ rowSelection }
             loading = { loading }
             style={ { width:1200 } }

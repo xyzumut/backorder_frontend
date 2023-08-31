@@ -2,8 +2,12 @@ import React from 'react';
 import debounce from "lodash.debounce"; // Doğru import edildiğinden emin olun
 import { SearchOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
+import { useHomePage } from '../../../context/homepage-context';
 
-const SearchComponent = ( { width, loading, style, query, setQuery, initialQuery } ) => {
+const SearchComponent = ( { width, loading, style } ) => {
+
+    const { query, setQuery } = useHomePage()
+
 
     const debouncedHandleChange = React.useMemo(() => {
         return debounce((value) => {

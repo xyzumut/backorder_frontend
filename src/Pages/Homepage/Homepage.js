@@ -5,29 +5,23 @@ import SearchComponent from "./homepage-components/SearchComponent";
 import SelectFilterComponent from "./homepage-components/SelectFilterComponent";
 import SelectActionComponent from "./homepage-components/SelectActionComponent";
 import { getDomainWithInfoAPI } from "../../services";
+import { useHomePage } from "../../context/homepage-context";
+import { Spin } from "antd";
 
 const Homepage = () => {
+    
+    const [ selected, setSelected ]                     = React.useState( {} ); // seçilen satırları tuttuğum state
+    const [ loading, setLoading ]                       = React.useState( true ); // verilerin gelip gelmediğinin loaderi
+    const [ selectActionState, setSelectActionState ]   = React.useState( '' );
 
-    const initialQuery = {
-        sortBy:'id',
-        orderBy:'ASC',
-        pagePerSize:10,
-        page:1,
-        filter:0,
-        search:''
-    }
-
-    const [ query, setQuery ] = React.useState( initialQuery )
-    const [ data, setData ]                 = React.useState( [] ); // genel datayı tuttuğum state
-    const [ selected, setSelected ]         = React.useState( {} ); // seçilen satırları tuttuğum state
-    const [ loading, setLoading ]           = React.useState( true ); // verilerin gelip gelmediğinin loaderi
-    const [ selectActionState, setSelectActionState ] = React.useState( '' );
+    const { query, data, setData, setMeta } = useHomePage()
 
     const loadData = React.useCallback( async () => {
         setLoading( true );
         const requestQuery = `?orderBy=${query.orderBy}&sortBy=${query.sortBy}&pagePerSize=${query.pagePerSize}&page=${query.page}&filter=${query.filter}&search=${query.search}`; 
-        let data = await getDomainWithInfoAPI( '/domain/getDomainWithInformation'+requestQuery );
-        setData( data );
+        const response = await getDomainWithInfoAPI( '/domain/getDomainWithInformation'+requestQuery );
+        setData( response.data );
+        setMeta( response.meta )
         setLoading( false );
     }, [ query ])
 
@@ -41,7 +35,7 @@ const Homepage = () => {
                 <div style = {{ width:1200, display:'flex', flexDirection:'column' }} >
                     <div style = {{ width:1200, display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
                         <SelectActionComponent 
-                            loading = { loading } query = { query } setQuery = { setQuery }  
+                            loading = { loading } 
                             selectActionState = { selectActionState } 
                             setSelectActionState = { setSelectActionState } 
                             action={ () => {
@@ -49,10 +43,10 @@ const Homepage = () => {
                                 console.log( 'Seçili satırlar : ', selected );
                             } } 
                         />
-                        <SelectFilterComponent query = { query } setQuery = { setQuery } />
+                        <SelectFilterComponent/>
                     </div>
-                    <SearchComponent loading = { false }   query = { query } setQuery = { setQuery } initialQuery = { initialQuery } width = { '100%' } style = {{ marginBottom:20 }} />
-                    <TableComponent  loading = { loading } query = { query } setQuery = { setQuery } initialQuery = { initialQuery } selected = { selected }      setSelected = { setSelected } domains = { data } />
+                    <SearchComponent loading = { false }  width = { '100%' } style = {{ marginBottom:20 }} />
+                    { !loading ? <TableComponent  loading = { loading } setLoading={ setLoading } selected = { selected } setSelected = { setSelected }/> : <Spin/> }
                 </div>
             </div>
         </motion.div>

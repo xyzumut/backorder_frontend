@@ -3,6 +3,7 @@ import { Layout, Menu } from 'antd';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Homepage, DataPage, MailPage, NetSearchPage } from './Pages/pages';
 import { HomeOutlined, MailOutlined, SearchOutlined } from '@ant-design/icons';
+import { HomepageContextProvider } from './context/homepage-context';
 
 const App = () => {
   const navigate = useNavigate();
@@ -39,8 +40,8 @@ const App = () => {
       <Layout>
         <Content>
           <Routes>
-            <Route path="/"           element={<Homepage/>}      />
-            <Route path="/anasayfa"   element={<Homepage/>}      />
+            <Route path="/"           element={ <HomepageContextProvider><Homepage/></HomepageContextProvider> }      />
+            <Route path="/anasayfa"   element={ <HomepageContextProvider><Homepage/></HomepageContextProvider> }      />
             <Route path="/mail"       element={<MailPage/>}      />
             <Route path="/kayit"      element={<DataPage/>}      />
             <Route path="/internet"   element={<NetSearchPage/>} />
