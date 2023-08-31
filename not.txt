@@ -1,16 +1,9 @@
 Tablo sayfası kalanlar:
 
-    - Front end :
-        > datepicker eklenecek
-        > sıralama istekleri halledilecek
-    - Back end :
-        > tarihe göre aralık filtrelemenin endpointi yazılacak
-        > toplu işlemlerin endpointi yazılacak
-        > domain onayla end pointi yazılacak
-        > Sıraya al end pointi yazılacak
-        > domain sil end pointi yazılacak
-        > yeni domain eklemek için endpoint yazılacak
-
+    - toplu işlemler kısmı yazılacak
+    - tarih aralığına göre filtrelemenin front end ve back end'i yazılacak
+    - sıralama işlemleri yapılacak
 
 Sorunlar:
     Domain durumu muallakta ona bakmam gerek 
+    Butonların loadingleri muallak

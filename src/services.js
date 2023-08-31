@@ -41,8 +41,49 @@ const addDomainAPI = async ( { endpoint, rawData } ) => {
     }
 }
 
+const deleteDomainAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, { 
+            method:'DELETE',
+        } );
+        const response  = await request.json();
+        return response;    
+    } 
+    catch ( error ) {
+        console.log( error )
+        return error;        
+    }
+}
+
+const addToQueueDomainAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response;    
+    } 
+    catch ( error ) {
+        console.log( error )
+        return error;        
+    }
+}
+
+const domainApprovedToggleAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response;    
+    } 
+    catch ( error ) {
+        console.log( error )
+        return error;        
+    }
+}
+
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
-    addDomainAPI
+    addDomainAPI,
+    deleteDomainAPI,
+    addToQueueDomainAPI,
+    domainApprovedToggleAPI
 }

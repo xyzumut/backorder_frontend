@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Badge, Table, Button, Popover } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
-import { deleteInfoAPI } from '../../../services';
+import { addToQueueDomainAPI, deleteDomainAPI, deleteInfoAPI, domainApprovedToggleAPI } from '../../../services';
 import { useHomePage } from '../../../context/homepage-context';
 import throwNotification from '../../../general/throwNotifiaction';
 
@@ -11,9 +11,9 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
     const { data, setData, query, setQuery, meta, setMeta, initialQuery } = useHomePage()
 
     const deleteInfo = async ( value ) => {
-        const deleteRequest = await deleteInfoAPI( '/information/delete/'+value.id );
+        const request = await deleteInfoAPI( '/information/delete/'+value.id );
         setLoading( true );
-        if( deleteRequest.status ) {
+        if( request.status ) {
             const newInfos = data.find( item => item.key === value.parent ).infos.filter( item => item.id !== value.key );
             setData( data.map( item => {
                 if ( item.key === value.parent ) {
@@ -32,6 +32,77 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             throwNotification( {
                 type:'error',
                 description:'Silme İşlemi Başarısız',
+                message:'Başarısız'
+            } );
+        }
+        setLoading( false );
+    }
+
+    const deleteDomain = async ( domainID ) => {
+        const request = await deleteDomainAPI( '/domain/delete/' + domainID );
+        setLoading( true );
+        if( request.status ) {
+            setData( data.filter( item => item.key !== domainID ) );
+            throwNotification( {
+                duration:2,
+                type:'success',
+                description:'Silme İşlemi Başarılı',
+                message:'Başarılı'
+            } );
+        }
+        else{
+            throwNotification( {
+                type:'error',
+                description:'Silme İşlemi Başarısız',
+                message:'Başarısız'
+            } );
+        }
+        setLoading( false );
+    }
+
+    const addToQueue = async ( domainID ) => {
+        const request = await addToQueueDomainAPI( '/domain/add-queue/' + domainID );
+        setLoading( true );
+        if( request.status ) {
+            setData( data.filter( item => item.key !== domainID ) );
+            throwNotification( {
+                duration:2,
+                type:'success',
+                description:'Sıraya koyma işlemi Başarılı',
+                message:'Başarılı'
+            } );
+        }
+        else{
+            throwNotification( {
+                type:'error',
+                description:'Sıraya koyma işlemi Başarısız',
+                message:'Başarısız'
+            } );
+        }
+        setLoading( false );
+    }
+
+    const domainApprovedToggle = async ( domainID ) => {
+        const request = await domainApprovedToggleAPI( '/domain/toggle-approved/' + domainID );
+        setLoading( true );
+        if( request.status ) {
+            setData( data.map( item => {
+                if ( item.key !== domainID ) {
+                    return item;
+                }
+                return { ...item, approved:true };
+            } ) );
+            throwNotification( {
+                duration:2,
+                type:'success',
+                description:'Onay Değiştirme İşlemi Başarılı',
+                message:'Başarılı'
+            } );
+        }
+        else{
+            throwNotification( {
+                type:'error',
+                description:'Onay Değiştirme İşlemi Başarısız',
                 message:'Başarısız'
             } );
         }
@@ -150,12 +221,10 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             key: 'action',
             width:150,
             render: ( props ) => {
-                // ilgili satırın elemanları aynen geliyor buraya
-                // console.log( 'etiket', props )
                 const content = () => {
                     return( 
                         <div>
-                            <Button type="primary" style={{ marginLeft:10, backgroundColor:'green' }} loading = { false }>
+                            <Button type="primary" style={{ marginLeft:10, backgroundColor:'green' }} loading = { false } onClick={ () => { domainApprovedToggle( props.key ) } } >
                                 Onayla
                             </Button>
 
@@ -163,11 +232,11 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                                 Mail Gönder
                             </Button>
                             
-                            <Button type="primary" style={{ marginLeft:10 }} loading = { false }>
+                            <Button type="primary" style={{ marginLeft:10 }} loading = { false } onClick={ () => { addToQueue( props.key ) } }>
                                 Sıraya Al
                             </Button>
 
-                            <Button type="primary" style={{ marginLeft:10 }} loading = { false } danger icon={ <DeleteOutlined/> } />
+                            <Button type="primary" style={{ marginLeft:10 }} loading = { false } danger icon={ <DeleteOutlined/> } onClick={ () => { deleteDomain( props.key ) } } />
                         </div>
                     )
                 }

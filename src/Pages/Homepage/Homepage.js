@@ -53,7 +53,7 @@ const Homepage = () => {
                     <SearchComponent loading = { false }  width = { '100%' } style = {{ marginBottom:20 }} />
                     { !loading ? <TableComponent  loading = { loading } setLoading={ setLoading } selected = { selected } setSelected = { setSelected }/> : <Spin/> }
                     <FloatButton icon={ <PlusOutlined/>} onClick={ () => { setIsModalOpen( true ) } } />  
-                    <ModalComponent isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+                    <ModalComponent isModalOpen={isModalOpen} setIsModalOpen={ setIsModalOpen }/>
                 </div>
             </div>
         </motion.div>
