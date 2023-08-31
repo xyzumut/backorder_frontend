@@ -2,10 +2,6 @@ Tablo sayfası kalanlar:
 
     - Front end :
         > datepicker eklenecek
-        > alt tablolarda kaynaklara yeni sekmede bağlantı oluşturulacak[YAPILDI]
-        > alt tablolarda silme işlemi için endpoint bağlantısı yapılacak
-        > notifiaction eklenecek
-        > floating button + popup aracılığı ile yeni domain ekleme formu halledilecek
         > sıralama istekleri halledilecek
     - Back end :
         > tarihe göre aralık filtrelemenin endpointi yazılacak
@@ -13,7 +9,6 @@ Tablo sayfası kalanlar:
         > domain onayla end pointi yazılacak
         > Sıraya al end pointi yazılacak
         > domain sil end pointi yazılacak
-        > infoların silme endpointi oluşturulacak[YAPILDI]
         > yeni domain eklemek için endpoint yazılacak
 
 

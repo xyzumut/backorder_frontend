@@ -6,13 +6,16 @@ import SelectFilterComponent from "./homepage-components/SelectFilterComponent";
 import SelectActionComponent from "./homepage-components/SelectActionComponent";
 import { getDomainWithInfoAPI } from "../../services";
 import { useHomePage } from "../../context/homepage-context";
-import { Spin } from "antd";
+import { Spin, FloatButton, Modal, Button, Input, DatePicker } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import ModalComponent from "./homepage-components/ModalComponent";
 
 const Homepage = () => {
     
     const [ selected, setSelected ]                     = React.useState( {} ); // seçilen satırları tuttuğum state
     const [ loading, setLoading ]                       = React.useState( true ); // verilerin gelip gelmediğinin loaderi
     const [ selectActionState, setSelectActionState ]   = React.useState( '' );
+    const [ isModalOpen, setIsModalOpen ]               = React.useState(false);
 
     const { query, data, setData, setMeta } = useHomePage()
 
@@ -28,6 +31,8 @@ const Homepage = () => {
     React.useEffect( () => {
         loadData();
     }, [ loadData ])
+
+
 
     return (
         <motion.div initial = {{ opacity:0 }} animate = {{ opacity:1 }} style = {{ display:'flex', width:'100%', height:'100vh', justifyContent:'center', alignItems:'flex-start' }}> 
@@ -47,6 +52,8 @@ const Homepage = () => {
                     </div>
                     <SearchComponent loading = { false }  width = { '100%' } style = {{ marginBottom:20 }} />
                     { !loading ? <TableComponent  loading = { loading } setLoading={ setLoading } selected = { selected } setSelected = { setSelected }/> : <Spin/> }
+                    <FloatButton icon={ <PlusOutlined/>} onClick={ () => { setIsModalOpen( true ) } } />  
+                    <ModalComponent isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
                 </div>
             </div>
         </motion.div>

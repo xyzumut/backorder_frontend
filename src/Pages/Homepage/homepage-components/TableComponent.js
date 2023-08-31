@@ -4,6 +4,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
 import { deleteInfoAPI } from '../../../services';
 import { useHomePage } from '../../../context/homepage-context';
+import throwNotification from '../../../general/throwNotifiaction';
 
 const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
     
@@ -20,11 +21,19 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                 }
                 return item;
             } ) )
-            alert( 'silme işlemi başarılı' )
-            // TODO başarılı uyarısı
+            throwNotification( {
+                duration:2,
+                type:'success',
+                description:'Silme İşlemi Başarılı',
+                message:'Başarılı'
+            } );
         }
         else{
-            // TODO başarısız uyarısı
+            throwNotification( {
+                type:'error',
+                description:'Silme İşlemi Başarısız',
+                message:'Başarısız'
+            } );
         }
         setLoading( false );
     }
