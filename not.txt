@@ -1,8 +1,5 @@
-Tablo sayfası kalanlar:
-
-    - toplu işlemler kısmı yazılacak
-    - sıralama işlemleri yapılacak
-
-Sorunlar:
-    Domain durumu muallakta ona bakmam gerek 
-    Butonların loadingleri muallak
+- Alt tablo güncellenecek
+    > duruma göre yönlendirmeleri yaptıracağım
+- Alt tablonun butonuna bakılacak
+- Gönder butonunun loadingine bakılacak
+- Onaylılar için toggle sütunda gösterilecek

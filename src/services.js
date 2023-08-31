@@ -79,11 +79,26 @@ const domainApprovedToggleAPI = async ( endpoint ) => {
     }
 }
 
+const domainMultipleActionAPI = async ( { endpoint, rawData } ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, { 
+            method:'POST',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return { status:'error', error:error };        
+    }
+}
+
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
     addDomainAPI,
     deleteDomainAPI,
     addToQueueDomainAPI,
-    domainApprovedToggleAPI
+    domainApprovedToggleAPI,
+    domainMultipleActionAPI
 }

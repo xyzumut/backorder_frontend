@@ -10,6 +10,12 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
     
     const { data, setData, query, setQuery, meta, setMeta, initialQuery } = useHomePage()
 
+    const initialSortState = {
+        sortBy:'id',
+        orderBy:'ASC'
+    }
+    const [ sortState, setSortState ] = React.useState( initialSortState );
+
     const deleteInfo = async ( value ) => {
         const request = await deleteInfoAPI( '/information/delete/'+value.id );
         setLoading( true );
@@ -186,14 +192,17 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
 
     const columns = [
         {
-            title: 'ID',
+            title: () => <span style={{ cursor:'pointer', color: query.sortBy === 'id' ? ( query.orderBy === 'ASC' ? 'green' : 'red' ) : 'black'}} onClick={ () => {
+                setQuery( { ...query, sortBy:'id', orderBy: query.sortBy === 'id' ? ( query.orderBy === 'ASC' ? 'DESC' : 'ASC' ) : query.orderBy } );
+
+            }}>ID</span>,
             dataIndex: 'key',
             width:100,
             align:'center',
         },
         {
-            title: () => <span onClick={ () => {
-                console.log( 'domaine göre sıralama isteği atıldı' )
+            title: () => <span style={{ cursor:'pointer', color: query.sortBy === 'domain' ? ( query.orderBy === 'ASC' ? 'green' : 'red' ) : 'black'}} onClick={ () => {
+                setQuery( { ...query, sortBy:'domain', orderBy: query.sortBy === 'domain' ? ( query.orderBy === 'ASC' ? 'DESC' : 'ASC' ) : query.orderBy } );
             } }>Domain</span>,
             key: 'domain',
             render: ( props ) => {
@@ -201,15 +210,17 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             }
         },
         {
-            title: () => <span onClick={ () => {
-                console.log( 'düşüş tarihi sıralama isteği atıldı' )
+            title: () => <span style={{ cursor:'pointer', color: query.sortBy === 'drop_date' ? ( query.orderBy === 'ASC' ? 'green' : 'red' ) : 'black'}} onClick={ () => {
+                setQuery( { ...query, sortBy:'drop_date', orderBy: query.sortBy === 'drop_date' ? ( query.orderBy === 'ASC' ? 'DESC' : 'ASC' ) : query.orderBy } );
             } }>Düşüş tarihi</span>,
             dataIndex: 'dropDate',
             width:150,
             align:'center'
         },
         {
-            title:'Durum',
+            title: () => <span style={{ cursor:'pointer', color: query.sortBy === 'status' ? ( query.orderBy === 'ASC' ? 'green' : 'red' ) : 'black'}} onClick={ () => {
+                setQuery( { ...query, sortBy:'status', orderBy: query.sortBy === 'status' ? ( query.orderBy === 'ASC' ? 'DESC' : 'ASC' ) : query.orderBy } );
+            } }> Durum </span>,
             key: 'status',
             width:150,
             render: ( props ) => {
@@ -265,6 +276,15 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
 
     return (
         <Table
+            bordered        = { true }                
+            expandable      = { expandable } 
+            columns         = { columns }
+            dataSource      = { data || [] }
+            rowSelection    = { rowSelection }
+            loading         = { loading }
+            style           = { { width:1200 } }
+            scroll          = { { y:600 } }
+            size            = 'medium'
             pagination = {{
                 total: meta && meta.filteredDataCount ? meta.filteredDataCount : 0, 
                 position: [ 'none' , 'bottomRight' ],
@@ -274,15 +294,6 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                     setQuery( { ...query, page:page, pagePerSize:pageSize } );
                 }
             }}
-            bordered = { true }                
-            expandable = { expandable } 
-            columns = { columns }
-            dataSource = { data || [] }
-            rowSelection = { rowSelection }
-            loading = { loading }
-            style = { { width:1200 } }
-            scroll = { { y:600 } }
-            size='medium'
         />
         
     );

@@ -4,16 +4,17 @@ import TableComponent from "./homepage-components/TableComponent";
 import SearchComponent from "./homepage-components/SearchComponent";
 import SelectFilterComponent from "./homepage-components/SelectFilterComponent";
 import SelectActionComponent from "./homepage-components/SelectActionComponent";
-import { getDomainWithInfoAPI } from "../../services";
+import { domainMultipleActionAPI, getDomainWithInfoAPI } from "../../services";
 import { useHomePage } from "../../context/homepage-context";
 import { Spin, FloatButton, Modal, Button, Input, DatePicker } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import ModalComponent from "./homepage-components/ModalComponent";
+import throwNotification from "../../general/throwNotifiaction";
 const { RangePicker } = DatePicker;
 
 const Homepage = () => {
     
-    const [ selected, setSelected ]                     = React.useState( {} ); // seçilen satırları tuttuğum state
+    const [ selected, setSelected ]                     = React.useState( [] ); // seçilen satırları tuttuğum state
     const [ loading, setLoading ]                       = React.useState( true ); // verilerin gelip gelmediğinin loaderi
     const [ selectActionState, setSelectActionState ]   = React.useState( '' );
     const [ isModalOpen, setIsModalOpen ]               = React.useState(false);
@@ -39,10 +40,58 @@ const Homepage = () => {
         setQuery( { ...query, startDate:startDate, endDate:endDate } );
     }
 
+    const selectActionFunction = async () => {
+
+        if ( selected.length < 1 ) {
+            throwNotification( {
+                duration:3,
+                type:'warning',
+                description: 'En az bir satır seçilmeli',
+                message:'Eksik'
+            } );
+            return;
+        }
+
+        if ( selectActionState === '' ) {
+            throwNotification( {
+                duration:3,
+                type:'warning',
+                description: 'Bir operasyon seçilmeli',
+                message:'Eksik'
+            } );
+            return;
+        }
+
+        const domainIDS = selected.map( item => item.key );
+
+        const request = await domainMultipleActionAPI( {
+            endpoint:'/domain/multiple',
+            rawData:JSON.stringify( { domainIDS: domainIDS, operation: selectActionState } )
+        } )
+
+        if( request.status ) {
+            setQuery( { ...query } );
+            throwNotification( {
+                duration:3,
+                type:'success',
+                description: request.message,
+                message:'Başarılı'
+            } );
+            setSelected( [] );
+            setSelectActionState( '' );
+        }
+        else{
+            throwNotification( {
+                type:'error',
+                description:request.message,
+                message:'Başarısız'
+            } );
+        }
+    }
+
     React.useEffect( () => {
         loadData();
     }, [ loadData ])
-
 
 
     return (
@@ -54,16 +103,13 @@ const Homepage = () => {
                             loading = { loading } 
                             selectActionState = { selectActionState } 
                             setSelectActionState = { setSelectActionState } 
-                            action={ () => {
-                                console.log( 'Seçilen işlem : ', selectActionState );  
-                                console.log( 'Seçili satırlar : ', selected );
-                            } } 
+                            action={ selectActionFunction } 
                         />
                         <RangePicker
                             format="YYYY-MM-DD"
                             onChange={ ( val ) => { handleRangePicker( val ) } }
                         />
-                        <SelectFilterComponent/>
+                        <SelectFilterComponent selectedAction = { selectActionState } />
                     </div>
                     <SearchComponent loading = { false }  width = { '100%' } style = {{ marginBottom:20 }} />
                     { !loading ? <TableComponent  loading = { loading } setLoading={ setLoading } selected = { selected } setSelected = { setSelected }/> : <Spin/> }

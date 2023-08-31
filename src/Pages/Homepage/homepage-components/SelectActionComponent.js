@@ -17,7 +17,7 @@ const SelectActionComponent = ( { selectActionState, setSelectActionState, query
     return ( 
         <div style={{ width:260, display:'flex', justifyContent:'space-around', 'alignItems':'center', height:60 }}>
             <Button disabled = { loading } type="primary" style={{ width:80 }} onClick={ () => { action(); } } >Gönder</Button>
-            <Select disabled = { loading } style={{ width: 170 }} options={ options } allowClear onChange = { handleChange } placeholder = 'Toplu İşlemler'/>
+            <Select disabled = { loading } style={{ width: 170 }} options={ options } allowClear onChange = { handleChange } value={ selectActionState } />
         </div>
     );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Select } from 'antd';
 import { useHomePage } from '../../../context/homepage-context';
 
-const SelectFilterComponent = ( ) => {
+const SelectFilterComponent = () => {
 
     const { query, setQuery,} = useHomePage(); 
 
