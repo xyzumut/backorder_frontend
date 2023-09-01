@@ -1,3 +1,2 @@
-- Onayla butonu toggle'a geçilecek ve sütun olarak listelenecek
 - domainin kontrolünün ne durumda olduğunun kontrolü yapılıp bilgisini tutacak backend kodu yazılacak ve ön yüze basılacak bu bilgi
 - mail ayarları ile alakalı araştırma yapılacak
