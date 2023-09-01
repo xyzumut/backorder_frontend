@@ -6,7 +6,7 @@ import SelectFilterComponent from "./homepage-components/SelectFilterComponent";
 import SelectActionComponent from "./homepage-components/SelectActionComponent";
 import { domainMultipleActionAPI, getDomainWithInfoAPI } from "../../services";
 import { useHomePage } from "../../context/homepage-context";
-import { Spin, FloatButton, Modal, Button, Input, DatePicker } from "antd";
+import { Spin, FloatButton, Modal, Button, Input, DatePicker, Badge } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import ModalComponent from "./homepage-components/ModalComponent";
 import throwNotification from "../../general/throwNotifiaction";
@@ -19,7 +19,7 @@ const Homepage = () => {
     const [ selectActionState, setSelectActionState ]   = React.useState( '' );
     const [ isModalOpen, setIsModalOpen ]               = React.useState(false);
 
-    const { query, setQuery, data, setData, setMeta } = useHomePage()
+    const { query, setQuery, data, setData, setMeta, meta } = useHomePage()
 
     const loadData = React.useCallback( async () => {
         setLoading( true );
@@ -111,7 +111,10 @@ const Homepage = () => {
                         />
                         <SelectFilterComponent selectedAction = { selectActionState } />
                     </div>
-                    <SearchComponent loading = { false }  width = { '100%' } style = {{ marginBottom:20 }} />
+                    <div style={{ width:'100%', display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}> 
+                        <SearchComponent loading = { false }  width = { '90%' } /> 
+                        <div style={{ backgroundColor:'#1677ff', padding:5, borderRadius:5, color:'white' }}> {meta.pagePerSize}/{meta.filteredDataCount} </div>  
+                    </div>
                     { !loading ? <TableComponent  loading = { loading } setLoading={ setLoading } selected = { selected } setSelected = { setSelected }/> : <Spin/> }
                     <FloatButton icon={ <PlusOutlined/>} onClick={ () => { setIsModalOpen( true ) } } />  
                     <ModalComponent isModalOpen={isModalOpen} setIsModalOpen={ setIsModalOpen }/>
