@@ -1,5 +1,4 @@
-- Alt tablo güncellenecek
-    > duruma göre yönlendirmeleri yaptıracağım
-- Alt tablonun butonuna bakılacak
-- Gönder butonunun loadingine bakılacak
-- Onaylılar için toggle sütunda gösterilecek
+- Sonuç sayısı meta içerisinde bulunan meta.pagePerSize/meta.filteredDataCount şeklinde ekranda gösterilecek, search bar kısaltılacak
+- Onayla butonu toggle'a geçilecek ve sütun olarak listelenecek
+- domainin kontrolünün ne durumda olduğunun kontrolü yapılıp bilgisini tutacak backend kodu yazılacak ve ön yüze basılacak bu bilgi
+- mail ayarları ile alakalı araştırma yapılacak
