@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Badge, Table, Button, Popover } from 'antd';
+import { Badge, Table, Button, Popover, Switch } from 'antd';
 import { DeleteOutlined, PlusCircleFilled, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
 import { addToQueueDomainAPI, deleteDomainAPI, deleteInfoAPI, domainApprovedToggleAPI } from '../../../services';
@@ -74,6 +74,13 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
         const request = await domainApprovedToggleAPI( '/domain/toggle-approved/' + domainID );
         setLoading( true );
         if( request.status ) {
+            setData( data.map( item => {
+                if ( item.key !== domainID ) {
+                    return item;
+                }
+                return { ...item, approved:!item.approved };
+            } ) );
+            /*
             if ( meta.pagePerSize > 10 ) {
                 setData( data.map( item => {
                     if ( item.key !== domainID ) {
@@ -85,13 +92,15 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             else{
                 setQuery( { ...query } )
             }
-            
+            */
             throwNotification( {
                 duration:2,
                 type:'success',
                 description:'Onay Değiştirme İşlemi Başarılı',
                 message:'Başarılı'
             } );
+            setLoading( false );
+            return true;
         }
         else{
             throwNotification( {
@@ -99,8 +108,9 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                 description:'Onay Değiştirme İşlemi Başarısız',
                 message:'Başarısız'
             } );
+            setLoading( false );
+            return false;
         }
-        setLoading( false );
     }
 
     const openTableModal = ( props ) => {
@@ -136,6 +146,24 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             align:'center'
         },
         {
+            title: () => <span style={{ cursor:'pointer', color: query.sortBy === 'approved' ? ( query.orderBy === 'ASC' ? 'red' : 'green' ) : 'black'}} onClick={ () => {
+                setQuery( { ...query, sortBy:'approved', orderBy: query.sortBy === 'approved' ? ( query.orderBy === 'ASC' ? 'DESC' : 'ASC' ) : query.orderBy } );
+            } }>Onay Durumu</span>,
+            key: 'approved',
+            width:150,
+            align:'center',
+            render: ( props ) => {
+                return(
+                    <Switch 
+                        checked = { props.approved }
+                        onChange = { async () => {
+                            await domainApprovedToggle( props.key );
+                        }}
+                    />
+                )
+            }
+        },
+        {
             title: () => <span style={{ cursor:'pointer', color: query.sortBy === 'status' ? ( query.orderBy === 'ASC' ? 'green' : 'red' ) : 'black'}} onClick={ () => {
                 setQuery( { ...query, sortBy:'status', orderBy: query.sortBy === 'status' ? ( query.orderBy === 'ASC' ? 'DESC' : 'ASC' ) : query.orderBy } );
             } }> Durum </span>,
@@ -161,17 +189,28 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             width:150,
             render: ( props ) => {
                 const content = () => {
+                    console.log( 'durum : ', props.approved )
                     return( 
                         <div>
-                            <ButtonComponent type="primary" style={{ marginLeft:10, backgroundColor:'green' }} loading = { false } onClick={ async () => { await domainApprovedToggle( props.key ) } } >
-                                Onayla
-                            </ButtonComponent>
 
-                            <ButtonComponent type="primary" style={{ marginLeft:10 }} loading = { false }>
+                            {/* <ButtonComponent type="primary" style={{ marginLeft:10, backgroundColor:'green' }} onClick={ async () => { await domainApprovedToggle( props.key ) } } >
+                                {
+                                    props.approved ? 'Onayı Geri Al' : 'Onayla'
+                                }
+                            </ButtonComponent>
+                            
+                            <Switch 
+                                checked = { props.approved }
+                                onChange = { async () => {
+                                    await domainApprovedToggle( props.key );
+                                }}
+                            /> */}
+
+                            <ButtonComponent type="primary" style={{ marginLeft:10 }}>
                                 Mail Gönder
                             </ButtonComponent>
                             
-                            <ButtonComponent type="primary" style={{ marginLeft:10 }} loading = { false } onClick={ async () => { await addToQueue( props.key ) } }>
+                            <ButtonComponent type="primary" style={{ marginLeft:10 }} onClick={ async () => { await addToQueue( props.key ) } }>
                                 Sıraya Al
                             </ButtonComponent>
 
@@ -180,17 +219,13 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                     )
                 }
                 return (
-                    <Popover content={content} title="" trigger="click" placement='bottom'>
+                    <Popover content={content} title="" trigger="hover" placement='bottom'>
                         <Button>Aksiyonlar</Button>
                     </Popover>
                 )
             },
         },
     ];
-
-    React.useEffect( () => {
-
-    }, [selected] )
 
     const rowSelection = {
         onChange: ( selectedRowKeys, selectedRows ) => {

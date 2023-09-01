@@ -7,7 +7,7 @@ const SelectActionComponent = ( { selectActionState, setSelectActionState, query
         { value: 'sil'       , label: 'Sil' },
         { value: 'kontrol-et', label: 'Kontrol Sırasına Koy' },
         { value: 'mail-at'   , label: 'Mail Gönder' },
-        { value: 'onayla'    , label: 'Onayla' },
+        { value: 'onayla'    , label: 'Onayını Değiştir' },
     ]
 
     const handleChange = ( value ) => {
