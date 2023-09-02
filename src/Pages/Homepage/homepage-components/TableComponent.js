@@ -251,7 +251,7 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                     total: meta && meta.filteredDataCount ? meta.filteredDataCount : 0, 
                     position: [ 'none' , 'bottomRight' ],
                     current:query.page,
-                    pageSize:query.pagePerSize,
+                    pageSize:query.pagePerSize || 10,
                     onChange: ( page, pageSize ) => {
                         setQuery( { ...query, page:page, pagePerSize:pageSize } );
                     }

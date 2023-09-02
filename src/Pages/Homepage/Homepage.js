@@ -113,7 +113,7 @@ const Homepage = () => {
                     </div>
                     <div style={{ width:'100%', display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}> 
                         <SearchComponent loading = { false }  width = { '90%' } /> 
-                        { !loading && <div style={{ backgroundColor:'#1677ff', padding:5, borderRadius:5, color:'white' }}> {meta.pagePerSize}/{meta.filteredDataCount} </div> }  
+                        { !loading && <div style={{ backgroundColor:'#1677ff', padding:5, borderRadius:5, color:'white' }}> { meta && meta.pagePerSize ? meta.pagePerSize : 0 }/{ meta && meta.filteredDataCount ? meta.filteredDataCount : 0} </div> }  
                     </div>
                     { !loading ? <TableComponent  loading = { loading } setLoading={ setLoading } selected = { selected } setSelected = { setSelected }/> : <Spin/> }
                     <FloatButton icon={ <PlusOutlined/>} onClick={ () => { setIsModalOpen( true ) } } />  
