@@ -134,7 +134,7 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             } }>Domain</span>,
             key: 'domain',
             render: ( props ) => {
-                return <NavLink to={ '/'+props.domain } > { props.domain } </NavLink>
+                return <NavLink to={ '/kayit/'+props.domain } > { props.domain } </NavLink>
             }
         },
         {

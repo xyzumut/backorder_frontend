@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import React from "react";
+import { useParams } from "react-router-dom";
 
 const DataPage = () => {
+
+    const params = useParams();
+    console.log( params.domain ) 
 
     return (
         <motion.div

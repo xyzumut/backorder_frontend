@@ -6,7 +6,7 @@ import SelectFilterComponent from "./homepage-components/SelectFilterComponent";
 import SelectActionComponent from "./homepage-components/SelectActionComponent";
 import { domainMultipleActionAPI, getDomainWithInfoAPI } from "../../services";
 import { useHomePage } from "../../context/homepage-context";
-import { Spin, FloatButton, Modal, Button, Input, DatePicker, Badge } from "antd";
+import { Spin, FloatButton, DatePicker } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import ModalComponent from "./homepage-components/ModalComponent";
 import throwNotification from "../../general/throwNotifiaction";

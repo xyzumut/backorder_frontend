@@ -358,7 +358,6 @@ const MailTemplateComponent = ( { template, setTemplate, width } ) => {
                                                             autoSize={{maxRows:10, minRows:1}}
                                                             value={ template.mailContent }
                                                             onChange={ ( e ) => { setTemplate( { ...template, mailContent:e.currentTarget.value} ) } }
-
                                                         />
                                                     </td>
                                                 </tr>
@@ -1016,7 +1015,6 @@ const MailTemplateComponent = ( { template, setTemplate, width } ) => {
                                                             }}
                                                             >
                                                             {
-                                                                template.socialMedia.twitter &&
                                                                 <img
                                                                     src="https://xykrne.stripocdn.email/content/assets/img/social-icons/logo-black/twitter-logo-black.png"
                                                                     alt="Tw"
@@ -1044,7 +1042,6 @@ const MailTemplateComponent = ( { template, setTemplate, width } ) => {
                                                             }}
                                                             >
                                                             {
-                                                                template.socialMedia.facebook &&
                                                                 <img
                                                                     src="https://xykrne.stripocdn.email/content/assets/img/social-icons/logo-black/facebook-logo-black.png"
                                                                     alt="Fb"
@@ -1071,7 +1068,6 @@ const MailTemplateComponent = ( { template, setTemplate, width } ) => {
                                                             }}
                                                             >
                                                             {
-                                                                template.socialMedia.linkedin &&
                                                                 <img
                                                                     src="https://xykrne.stripocdn.email/content/assets/img/social-icons/logo-black/linkedin-logo-black.png"
                                                                     alt="In"

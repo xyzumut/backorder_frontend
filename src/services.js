@@ -93,6 +93,45 @@ const domainMultipleActionAPI = async ( { endpoint, rawData } ) => {
     }
 }
 
+const getMailTemplateAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
+const addMailTemplateAPI = async ( { endpoint, rawData } ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, { 
+            method:'PATCH',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return { status:'error', error:error };        
+    }
+}
+
+const sendTestMailAPI = async ( { endpoint, rawData } ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, { 
+            method:'POST',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return { status:'error', error:error };        
+    }
+}
+
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
@@ -100,5 +139,8 @@ export{
     deleteDomainAPI,
     addToQueueDomainAPI,
     domainApprovedToggleAPI,
-    domainMultipleActionAPI
+    domainMultipleActionAPI,
+    getMailTemplateAPI,
+    addMailTemplateAPI,
+    sendTestMailAPI
 }
