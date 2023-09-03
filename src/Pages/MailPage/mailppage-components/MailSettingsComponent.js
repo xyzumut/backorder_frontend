@@ -56,17 +56,17 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
 
             <h3> Kısa Kodlar </h3>
             <div style={{ width:350, height:100, display:'flex', justifyContent:'space-around', flexDirection:'column', marginBottom:50 }}>
-                <div>
-                    Düşecek Olan Domain : <span style={{ color:'gray', cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %domain% </span>
+                <div style={{ color:'gray' }}>
+                    Düşecek Olan Domain : <span style={{ color:'black', fontWeight:800, cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %domain% </span>
                 </div>
-                <div>
-                    Hedef Mail Adresi : <span style={{ color:'gray', cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %hedef% </span>
+                <div style={{ color:'gray' }}>
+                    Hedef Mail Adresi : <span style={{ color:'black', fontWeight:800, cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %hedef% </span>
                 </div>
-                <div>
-                    Bilginin Alındığı Kaynak : <span style={{ color:'gray', cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %kaynak% </span>
+                <div style={{ color:'gray' }}>
+                    Bilginin Alındığı Kaynak : <span style={{ color:'black', fontWeight:800, cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %kaynak% </span>
                 </div>
-                <div>
-                    Domainin Düşüş tarihi : <span style={{ color:'gray', cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %tarih% </span>
+                <div style={{ color:'gray' }}>
+                    Domainin Düşüş tarihi : <span style={{ color:'black', fontWeight:800, cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %tarih% </span>
                 </div>
             </div>
 

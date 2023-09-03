@@ -1,6 +1,5 @@
 const BASE_URL = 'http://127.0.0.1:8000'
 
-
 const getDomainWithInfoAPI = async ( endpoint ) => {
     try {
         const request   = await fetch( BASE_URL+endpoint );
@@ -132,6 +131,17 @@ const sendTestMailAPI = async ( { endpoint, rawData } ) => {
     }
 }
 
+const getDomainDataAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
@@ -142,5 +152,6 @@ export{
     domainMultipleActionAPI,
     getMailTemplateAPI,
     addMailTemplateAPI,
-    sendTestMailAPI
+    sendTestMailAPI,
+    getDomainDataAPI
 }
