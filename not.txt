@@ -1,2 +1,11 @@
-- domainin kontrolünün ne durumda olduğunun kontrolü yapılıp bilgisini tutacak backend kodu yazılacak ve ön yüze basılacak bu bilgi
-- mail ayarları ile alakalı araştırma yapılacak
+- domain özel sayfası tasarlanacak
+    - Domainin kabul edilip edilmeme durumu buradanda yönetilebilecek
+
+- mail ayarları sayfası
+    - mail ayarlarını dinamik almaya çalışacağım
+
+- Symfony için komut oluşturma işini araştıracağım
+
+- Google api ayarlarının sayfası yapılacak
+
+- statü mevzu çözülecek

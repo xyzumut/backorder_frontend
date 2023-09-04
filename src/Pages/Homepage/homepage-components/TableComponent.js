@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Badge, Table, Button, Popover, Switch } from 'antd';
-import { DeleteOutlined, PlusCircleFilled, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
-import { addToQueueDomainAPI, deleteDomainAPI, deleteInfoAPI, domainApprovedToggleAPI } from '../../../services';
+import { addToQueueDomainAPI, deleteDomainAPI, domainApprovedToggleAPI } from '../../../services';
 import { useHomePage } from '../../../context/homepage-context';
 import throwNotification from '../../../general/throwNotifiaction';
 import TableModal from './TableComponentsSubComponents/TableModal';

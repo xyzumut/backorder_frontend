@@ -1,42 +1,10 @@
-import { Modal, DatePicker, Button, Input, Table } from "antd"
+import { Modal, Table } from "antd"
 import React from "react"
-import throwNotification from "../../../../general/throwNotifiaction";
-import ButtonComponent from "../../../../general/ButtonComponent";
-import { deleteInfoAPI } from "../../../../services";
 import { useHomePage } from "../../../../context/homepage-context";
 
 const TableModal = ( { domainData, setDomainData, setTableModalIsVisible, tableModalIsVisible } ) => {
 
     const { data, setData } = useHomePage()
-    
-
-    const deleteInfo = async ( value ) => {
-        const request = await deleteInfoAPI( '/information/delete/'+value.id );
-        if( request.status ) {
-
-            const newInfos = data.find( item => item.key === value.parent ).infos.filter( item => item.id !== value.key );
-            setData( data.map( item => {
-                if ( item.key === value.parent ) {
-                    item.infos = newInfos;
-                }
-                return item;
-            } ) )
-            setDomainData( { ...domainData, infos: newInfos } );
-            throwNotification( {
-                duration:2,
-                type:'success',
-                description:'Silme İşlemi Başarılı',
-                message:'Başarılı'
-            } );
-        }
-        else{
-            throwNotification( {
-                type:'error',
-                description:'Silme İşlemi Başarısız',
-                message:'Başarısız'
-            } );
-        }
-    }
 
     return(
         <Modal 

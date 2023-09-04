@@ -12,10 +12,11 @@ const getDomainWithInfoAPI = async ( endpoint ) => {
     }
 }
 
-const deleteInfoAPI = async ( endpoint ) => {
+const deleteInfoAPI = async ( { endpoint, rawData } ) => {
     try {
         const request   = await fetch( BASE_URL+endpoint, { 
             method:'DELETE',
+            body  :rawData
         } );
         const response  = await request.json();
         return response;    
