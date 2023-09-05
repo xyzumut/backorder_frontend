@@ -1,13 +1,6 @@
 
-- statü mevzu çözülecek
-
-- event mevzu çözülecek
-
-- cron araştırılacak
-
-
-
-
 Ertelenenler:
 
 - mail ayarlarını dinamik alacağım
+
+- statü mevzu çözülecek
