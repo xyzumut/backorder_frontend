@@ -8,6 +8,7 @@ import throwNotification from "../../general/throwNotifiaction";
 const MailPage = () => {
 
     const [ template, setTemplate ] = React.useState( {
+        subject         :'',
         mailHeader      :'Mail Başlığı',
         mailContent     :'Mail İçeriği',
         mailButtonText  :'Buton Yazısı',
@@ -23,7 +24,8 @@ const MailPage = () => {
                 mailContent     : request.data.mailContent, 
                 mailButtonText  : request.data.mailButtonText, 
                 mailFooter1     : request.data.mailFooter1,
-                mailFooter2     : request.data.mailFooter2
+                mailFooter2     : request.data.mailFooter2,
+                subject         : request.data.subject
             } );
             throwNotification( {
                 duration:2,
@@ -44,7 +46,8 @@ const MailPage = () => {
                 mailContent     : '', 
                 mailButtonText  : '', 
                 mailFooter1     : '',
-                mailFooter2     : ''
+                mailFooter2     : '',
+                subject         : ''
             } );
         }
     }

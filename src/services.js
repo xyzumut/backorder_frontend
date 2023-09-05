@@ -191,6 +191,32 @@ const getSMTPConfigAPI = async ( endpoint ) => {
         return error;        
     }
 }
+
+const setMailTargetDateAPI = async ( { endpoint, rawData } ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, {
+            method:'POST',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
+const getMailTargetDateAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
@@ -206,5 +232,7 @@ export{
     addGoogleFieldsAPI,
     getGoogleFieldsAPI,
     setSMTPConfigAPI,
-    getSMTPConfigAPI
+    getSMTPConfigAPI,
+    setMailTargetDateAPI,
+    getMailTargetDateAPI
 }

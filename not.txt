@@ -1,11 +1,13 @@
-- mail ayarları sayfası
-    - mail ayarlarını dinamik alacağım
-    - onaylananlar için mail attırma seçeneğini işaretleyeceğim
-
-- Symfony için komut oluşturma işini araştıracağım
 
 - statü mevzu çözülecek
 
 - event mevzu çözülecek
 
 - cron araştırılacak
+
+
+
+
+Ertelenenler:
+
+- mail ayarlarını dinamik alacağım

@@ -1,16 +1,16 @@
-import { Input, Button, Modal, Form } from "antd";
+import { Input, Button, Modal, Form, Spin } from "antd";
 import React from "react";
 import ButtonComponent from "../../../general/ButtonComponent";
-import { addMailTemplateAPI, getSMTPConfigAPI, sendTestMailAPI, setSMTPConfigAPI } from "../../../services";
+import { addMailTemplateAPI, getMailTargetDateAPI, getSMTPConfigAPI, sendTestMailAPI, setMailTargetDateAPI, setSMTPConfigAPI } from "../../../services";
 import throwNotification from "../../../general/throwNotifiaction";
-
+import { InputNumber } from 'antd';
 const MailSettingsComponent = ({  template, setTemplate }) => {
 
     const [ testData, setTestData ]                 = React.useState( { target:'', subject:'Test Konu Başlığı' } );
     const [ modalVisible, setModalVisible ]         = React.useState( false );
     const [ smtpModalVisible, setSmtpModalVisible ] = React.useState( false );
     const [ mailSettings, setMailSettings ] = React.useState( { smtpServer:'', port:'', username:'', password:'', } )
-
+    const [ mailDateNumber, setMailDataNumber ] = React.useState( -1 );
     const [ mailSettingsFields, setMailSettingsFields ] = React.useState([
         {
           name: ['smtpServer'],
@@ -30,12 +30,52 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
         },
     ]);
 
+    const getMailDateNumber = async () => {
+        const request = await getMailTargetDateAPI( '/options/getMailTargetDate' );
+        if( request.status && request.status === true ){
+            setMailDataNumber( request.data );
+        }
+        else{
+            setMailDataNumber( 15 );
+        }
+    }
+
+    const handleSetMailDateNumber = async ( val ) => {
+        
+        const temp = mailDateNumber;
+        setMailDataNumber(-1);
+        const request = await setMailTargetDateAPI( { endpoint:'/options/setMailTargetDate', rawData:JSON.stringify({ targetDate:val }) } );
+        if ( request.status && request.status === true ) {
+            setMailDataNumber( val );
+        }
+        else{
+            setMailDataNumber( temp );
+            throwNotification( {
+                duration:5,
+                type:'error',
+                description: request.error,
+                message:'Hata'
+            } );
+        }
+        
+    }
+
+    React.useEffect( () => {
+        getMailDateNumber();
+    }) 
     return(
         <div style={{ width:400, height:800, display:'flex', paddingTop:100, paddingLeft:50, flexDirection:'column' }}>
 
-            <ButtonComponent type="primary" style={{ width:'min-content', backgroundColor:'green', marginBottom:50 }} onClick = { async () => { 
+            <div style={{ width:400, height:100 }}>
+                Kaç gün öncesine mail atsın? : { mailDateNumber !== -1 ? <InputNumber min={1} max={30} defaultValue={mailDateNumber} onChange={ async ( e ) => { await handleSetMailDateNumber(e) } }/> : <Spin/> }
+            </div>
+
+            <Input placeholder="Mail Konusu" value={template.subject} onChange={ (e) => { setTemplate( { ...template, subject:e.currentTarget.value } ) } } maxLength={50} />
+
+            <ButtonComponent type="primary" style={{ width:'min-content', backgroundColor:'green', marginBottom:30, marginTop:30 }} onClick = { async () => { 
 
                 const data = JSON.stringify( { 
+                    subject         : template.subject,
                     mailButtonText  : template.mailButtonText,
                     mailContent     : template.mailContent,
                     mailFooter1     : template.mailFooter1,
@@ -43,8 +83,6 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                     mailHeader      : template.mailHeader,
                 })
 
-                console.log( ' data : ', data );
-                
                 const request = await addMailTemplateAPI( { endpoint:'/options/template', rawData:data } );
 
                 if ( request.status && request.status !== 'error' ) {
@@ -94,7 +132,7 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                 Test Maili gönder
             </Button>
 
-            <ButtonComponent type="primary" style={{width:'55%', marginTop:20}} onClick = { async () => { 
+            <ButtonComponent disabled={true} type="primary" style={{width:'55%', marginTop:20}} onClick = { async () => { 
                 
                 const request = await getSMTPConfigAPI( '/options/getconfig' );
 
