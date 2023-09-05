@@ -1,6 +1,5 @@
-
-Ertelenenler:
-
-- mail ayarlarını dinamik alacağım
-
+Yapılacaklar:
+- kısa kodlar
 - statü mevzu çözülecek
+- mail ayarlarını dinamik alacağım
+- excel
