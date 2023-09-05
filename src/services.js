@@ -167,6 +167,30 @@ const getGoogleFieldsAPI = async ( endpoint ) => {
     }
 }
 
+const setSMTPConfigAPI = async ( { endpoint, rawData } ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, {
+            method:'POST',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
+const getSMTPConfigAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
@@ -180,5 +204,7 @@ export{
     sendTestMailAPI,
     getDomainDataAPI,
     addGoogleFieldsAPI,
-    getGoogleFieldsAPI
+    getGoogleFieldsAPI,
+    setSMTPConfigAPI,
+    getSMTPConfigAPI
 }

@@ -1,13 +1,34 @@
-import { Input, Button, Modal } from "antd";
+import { Input, Button, Modal, Form } from "antd";
 import React from "react";
 import ButtonComponent from "../../../general/ButtonComponent";
-import { addMailTemplateAPI, sendTestMailAPI } from "../../../services";
+import { addMailTemplateAPI, getSMTPConfigAPI, sendTestMailAPI, setSMTPConfigAPI } from "../../../services";
 import throwNotification from "../../../general/throwNotifiaction";
 
 const MailSettingsComponent = ({  template, setTemplate }) => {
 
-    const [ testData, setTestData ]         = React.useState( { target:'', subject:'Test Konu Başlığı' } );
-    const [ modalVisible, setModalVisible ] = React.useState( false );
+    const [ testData, setTestData ]                 = React.useState( { target:'', subject:'Test Konu Başlığı' } );
+    const [ modalVisible, setModalVisible ]         = React.useState( false );
+    const [ smtpModalVisible, setSmtpModalVisible ] = React.useState( false );
+    const [ mailSettings, setMailSettings ] = React.useState( { smtpServer:'', port:'', username:'', password:'', } )
+
+    const [ mailSettingsFields, setMailSettingsFields ] = React.useState([
+        {
+          name: ['smtpServer'],
+          value: '',
+        },
+        {
+            name: ['port'],
+            value: '',
+        },
+        {
+            name: ['username'],
+            value: '',
+        },
+        {
+            name: ['password'],
+            value: '',
+        },
+    ]);
 
     return(
         <div style={{ width:400, height:800, display:'flex', paddingTop:100, paddingLeft:50, flexDirection:'column' }}>
@@ -73,7 +94,125 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                 Test Maili gönder
             </Button>
 
-            
+            <ButtonComponent type="primary" style={{width:'55%', marginTop:20}} onClick = { async () => { 
+                
+                const request = await getSMTPConfigAPI( '/options/getconfig' );
+
+                if ( request.status === true ) {
+                    const data = request.data;
+                    setMailSettingsFields( [ 
+                        { name:'username',   value:data.username    }, 
+                        { name:'password',   value:data.password    }, 
+                        { name:'port',       value:data.port        }, 
+                        { name:'smtpServer', value:data.smtpServer  }
+                    ] );
+                    setSmtpModalVisible( true );
+                    return;
+                }
+                throwNotification( { 
+                    description:'Mail SMTP Ayarları getirilirken ciddi sorun oluştu',
+                    duration:6,
+                    message:'Hata',
+                    type:'error'
+                } )
+            } } >
+                SMTP Bilgilerini Göster
+            </ButtonComponent>
+
+            <Modal 
+                title="SMTP Bilgileri"
+                footer={ [ <Button key="back" onClick={() => { setSmtpModalVisible( false ) }} type="primary" danger> Kapat </Button> ] } 
+                open={ smtpModalVisible }
+                onCancel={ () => { setSmtpModalVisible( false ) } }
+            >
+                <Form 
+                    labelCol = {{ span:8 }}
+                    fields = {mailSettingsFields}
+                    style = {{ marginTop:10 }}
+                    onFinish = { async () => { 
+
+                        const rawData = JSON.stringify( 
+                            { 
+                                smtpServer  :mailSettings.smtpServer, 
+                                username    :mailSettings.username, 
+                                password    :mailSettings.password, 
+                                port        :mailSettings.port 
+                            } 
+                        );
+                        
+                        const request = await setSMTPConfigAPI( { endpoint:'/options/setconfig', rawData:rawData } );
+
+                        if ( request.status === true ) {
+                            throwNotification( {
+                                duration:2,
+                                type:'success',
+                                description: request.message,
+                                message:'Başarılı'
+                            } );
+                        }
+                        else{
+                            throwNotification( {
+                                duration:5,
+                                type:'error',
+                                description: request.message ? request.message : 'SMTP Ayarlarında değişiklik yapılamadı',
+                                message:'Başarısız'
+                            } );
+                        }
+                    }}
+                >
+                    <Form.Item
+                        label="Smtp Sunucusu"
+                        name="smtpServer"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'SMTP Sunucusunu Girin',
+                            },
+                        ]}
+                    >
+                        <Input value={ mailSettings.smtpServer } onChange={ (e) => { setMailSettings( { ...mailSettings, smtpServer:e.currentTarget.value } )  } }/>
+                    </Form.Item>
+                    <Form.Item
+                        label="SMTP Portunu"
+                        name="port"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'SMTP Portunu Girin',
+                            },
+                        ]}
+                    >
+                        <Input value={ mailSettings.port } onChange={ (e) => { setMailSettings( { ...mailSettings, port:e.currentTarget.value } )  } }/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Kullanıcı Adı"
+                        name="username"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Hesap Kullanıcı Adını Girin',
+                            },
+                        ]}
+                    >
+                        <Input value={ mailSettings.username } onChange={ (e) => { setMailSettings( { ...mailSettings, username:e.currentTarget.value } )  } }/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Hesap Şifresi"
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Hesap Şifresini Girin',
+                            },
+                        ]}
+                    >
+                        <Input value={ mailSettings.password } onChange={ (e) => { setMailSettings( { ...mailSettings, password:e.currentTarget.value } )  } }/>
+                    </Form.Item>
+                    <Form.Item>
+                        <ButtonComponent htmlType="submit" type='primary' style={{ backgroundColor:'green' }} > SMTP Bilgilerini Kaydet </ButtonComponent>
+                    </Form.Item>
+                </Form>
+            </Modal>
 
             <Modal 
                 title="Test Maili Gönder" 
@@ -111,7 +250,7 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                         throwNotification( {
                             duration:5,
                             type:'error',
-                            description: 'Bir Hata oluştu',
+                            description: request.message ? request.message :  'Bir Hata oluştu',
                             message:'Hata'
                         } );
                     }
