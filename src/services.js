@@ -217,6 +217,17 @@ const getMailTargetDateAPI = async ( endpoint ) => {
     }
 }
 
+const sendMailForcedAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
@@ -234,5 +245,6 @@ export{
     setSMTPConfigAPI,
     getSMTPConfigAPI,
     setMailTargetDateAPI,
-    getMailTargetDateAPI
+    getMailTargetDateAPI,
+    sendMailForcedAPI
 }

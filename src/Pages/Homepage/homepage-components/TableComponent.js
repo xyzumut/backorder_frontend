@@ -2,7 +2,7 @@ import React from 'react';
 import { Badge, Table, Button, Popover, Switch } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
-import { addToQueueDomainAPI, deleteDomainAPI, domainApprovedToggleAPI } from '../../../services';
+import { addToQueueDomainAPI, deleteDomainAPI, domainApprovedToggleAPI, sendMailForcedAPI } from '../../../services';
 import { useHomePage } from '../../../context/homepage-context';
 import throwNotification from '../../../general/throwNotifiaction';
 import TableModal from './TableComponentsSubComponents/TableModal';
@@ -113,6 +113,29 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
         }
     }
 
+    const sendMailForced = async ( domainID ) => {
+
+        const request = await sendMailForcedAPI( '/mail/sendMail/'+domainID );
+
+        if ( request.status && request.status === true ) {
+            throwNotification( {
+                duration:4,
+                type:'success',
+                description: request.message || 'Mail Atma İşlemi Başarılı',
+                message:'Başarılı'
+            });
+        }
+        else{
+            throwNotification( {
+                duration:4,
+                type:'error',
+                description: request.message || 'Mail Atma İşlemi Başarısız',
+                message:'Başarısız'
+            });
+        }
+
+    }
+
     const openTableModal = ( props ) => {
         setTableModalData( { ...props, infos:props.infos.map( item => { return { ...item, key:item.id, parent:props.key } } ) } );
         setTableModalIsVisible( true );
@@ -206,7 +229,7 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                                 }}
                             /> */}
 
-                            <ButtonComponent type="primary" style={{ marginLeft:10 }}>
+                            <ButtonComponent type="primary" style={{ marginLeft:10 }} onClick = { async () => { await sendMailForced( props.key ) } } >
                                 Mail Gönder
                             </ButtonComponent>
                             
