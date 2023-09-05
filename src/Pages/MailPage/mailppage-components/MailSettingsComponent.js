@@ -8,7 +8,6 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
 
     const [ testData, setTestData ]         = React.useState( { target:'', subject:'Test Konu Başlığı' } );
     const [ modalVisible, setModalVisible ] = React.useState( false );
-    const [ loading, setSetLoading ]        = React.useState( '' );
 
     return(
         <div style={{ width:400, height:800, display:'flex', paddingTop:100, paddingLeft:50, flexDirection:'column' }}>
@@ -25,7 +24,7 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
 
                 console.log( ' data : ', data );
                 
-                const request = await addMailTemplateAPI( { endpoint:'/mail/template', rawData:data } );
+                const request = await addMailTemplateAPI( { endpoint:'/options/template', rawData:data } );
 
                 if ( request.status && request.status !== 'error' ) {
                     throwNotification( {
@@ -73,6 +72,8 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
             <Button type="primary" htmlType="submit" onClick = { () => { setModalVisible( true ) } } style={{width:'50%'}}>
                 Test Maili gönder
             </Button>
+
+            
 
             <Modal 
                 title="Test Maili Gönder" 

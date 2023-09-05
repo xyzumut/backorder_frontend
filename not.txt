@@ -1,11 +1,11 @@
-- domain özel sayfası tasarlanacak
-    - Domainin kabul edilip edilmeme durumu buradanda yönetilebilecek
-
 - mail ayarları sayfası
-    - mail ayarlarını dinamik almaya çalışacağım
+    - mail ayarlarını dinamik alacağım
+    - onaylananlar için mail attırma seçeneğini işaretleyeceğim
 
 - Symfony için komut oluşturma işini araştıracağım
 
-- Google api ayarlarının sayfası yapılacak
-
 - statü mevzu çözülecek
+
+- event mevzu çözülecek
+
+- cron araştırılacak

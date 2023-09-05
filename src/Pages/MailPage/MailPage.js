@@ -14,11 +14,9 @@ const MailPage = () => {
         mailFooter1     :'Footer Yazısı 1',
         mailFooter2     :'Footer Yazısı 2',
     } )
-    
-    const [ loading, setLoading ] = React.useState();
 
     const getData = async () => {
-        const request = await getMailTemplateAPI( '/mail/template' );
+        const request = await getMailTemplateAPI( '/options/template' );
         if ( request.status ) {
             setTemplate( {
                 mailHeader      : request.data.mailHeader,
@@ -38,7 +36,7 @@ const MailPage = () => {
             throwNotification( {
                 duration:5,
                 type:'error',
-                description: request.message && request.message || 'Mail şablonu getirilirken bir hata oluştu',
+                description: request.message ? request.message : 'Mail şablonu getirilirken bir hata oluştu',
                 message:'Hata'
             } );
             setTemplate( {

@@ -12,11 +12,10 @@ const getDomainWithInfoAPI = async ( endpoint ) => {
     }
 }
 
-const deleteInfoAPI = async ( { endpoint, rawData } ) => {
+const deleteInfoAPI = async ( endpoint ) => {
     try {
         const request   = await fetch( BASE_URL+endpoint, { 
             method:'DELETE',
-            body  :rawData
         } );
         const response  = await request.json();
         return response;    
@@ -143,6 +142,31 @@ const getDomainDataAPI = async ( endpoint ) => {
     }
 }
 
+const addGoogleFieldsAPI = async ( { endpoint, rawData } ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, {
+            method:'POST',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
+const getGoogleFieldsAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
@@ -154,5 +178,7 @@ export{
     getMailTemplateAPI,
     addMailTemplateAPI,
     sendTestMailAPI,
-    getDomainDataAPI
+    getDomainDataAPI,
+    addGoogleFieldsAPI,
+    getGoogleFieldsAPI
 }

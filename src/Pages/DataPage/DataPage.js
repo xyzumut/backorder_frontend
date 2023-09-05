@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { deleteInfoAPI, getDomainDataAPI } from "../../services";
+import { deleteInfoAPI, domainApprovedToggleAPI, getDomainDataAPI } from "../../services";
 import throwNotification from "../../general/throwNotifiaction";
-import { Spin, Table } from "antd";
+import { Spin, Table, Switch } from "antd";
 import ButtonComponent from "../../general/ButtonComponent";
 
 const DataPage = () => {
@@ -11,9 +11,9 @@ const DataPage = () => {
     const params = useParams();
 
     const [ loading, setLoading ] = React.useState( false );
-    const [ data, setData ]       = React.useState( { domain:'', dropDate:'', govTrResult:[], infos:[] } );
+    const [ data, setData ]       = React.useState( { domain:'', dropDate:'', status:false, approved:false, id:-1, govTrResult:[], infos:[] } );
 
-    const getData = async () => {
+    const getData = React.useCallback( async () => {
         setLoading( true );
         const request = await getDomainDataAPI( '/domain/get/'+params.domain );
         if ( request.status === true ) {
@@ -38,12 +38,38 @@ const DataPage = () => {
             request.message && console.error( request.message );
         }
         setLoading( false );
+    }, [params.domain]);
+
+
+
+    const handleApproved = async () => {
+        const request = await domainApprovedToggleAPI( '/domain/toggle-approved/' + data.id );
+        if ( request.status && request.status === true ) {
+            setData( { ...data, approved:!data.approved } ); 
+            throwNotification( {
+                duration:2,
+                type:'success',
+                description: request.message,
+                message:'Başarılı'
+            } );           
+        }
+        else{
+            throwNotification( {
+                duration:2,
+                type:'error',
+                description: request.message,
+                message:'Hata'
+            } );
+        }
     }
 
     React.useEffect( () => {
         getData();
-    }, []);
+    }, [getData]);
 
+    React.useEffect( () => {
+        console.log( data.approved )
+    }, [data])
     return (
         <motion.div
             initial = {{ opacity:0, translateY:100  }}
@@ -58,7 +84,7 @@ const DataPage = () => {
                         <h3 style={{ margin:'5px 0' }}> Domain : { data.domain } </h3>
                         <h4 style={{ margin:'5px 0' }}> Düşüş Tarihi : { data.dropDate } </h4>
                         <h4 style={{ margin:'5px 0' }}> Durumu : Kuyrukta </h4>
-                        <h4 style={{ margin:'5px 0' }}> Onay : </h4>
+                        <h4 style={{ margin:'5px 0' }}> Onay : <Switch  checked = { data.approved } onChange = { async () => { await handleApproved(); } } /> </h4>
                         <h3 style={{ margin:'5px 0' }}> E-Ticaret Bilgi Formu Sonuçları </h3>
                         <Table 
                             scroll  = { { y:550 } }
@@ -111,7 +137,7 @@ const DataPage = () => {
                                     align:'center',
                                     render : ( props ) => {
                                         return <ButtonComponent onClick = { async () => {
-                                            const request = await deleteInfoAPI( { endpoint:'/information/delete', rawData:JSON.stringify( { info:props.information } ) } );
+                                            const request = await deleteInfoAPI( '/information/delete/'+props.key );
                                             if ( request.status && request.status === true ) {
                                                 throwNotification( {
                                                     duration:2,
@@ -119,7 +145,7 @@ const DataPage = () => {
                                                     description: request.message,
                                                     message:'Başarılı'
                                                 } );
-                                                setData( { ...data, infos:data.infos.filter( info => info.information !== props.information ) } );
+                                                setData( { ...data, infos:data.infos.filter( info => info.key !== props.key ) } );
                                             }
                                             else{
                                                 throwNotification( {
@@ -135,7 +161,7 @@ const DataPage = () => {
                                 }
                             ]}
                             dataSource={ data.infos || [] }
-                            pagination = {{ pageSize:50 }}
+                            pagination = {{ defaultPageSize:50 }}
                         />
                     </div>
                 </>
