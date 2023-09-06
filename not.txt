@@ -1,5 +1,13 @@
-Yapılacaklar:
-- kısa kodlar
-- statü mevzu çözülecek
-- mail ayarlarını dinamik alacağım
+Öncelikliler
+- yeni tarihler eklenecek
 - excel
+
+Düşük Öncelikliler
+- statü mevzu çözülecek( tekrar sıraya konanlara, onaylanmamışlara veya araştırması bitmeyenlere mail atılamayacak )
+- mail ayarlarını dinamik alacağım
+- kaç gün öncesi inputu düzeltilecek
+- mail gönder butonu kuyruğa atacak
+
+
+bitenler:
+- kısa kodlar çözüldü
