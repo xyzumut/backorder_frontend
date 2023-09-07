@@ -1,5 +1,5 @@
 Öncelikliler
-- mail ayarlarını dinamik alacağım
+- short code mevzusu halledilecek
 - tld mevzu bakılacak
 - excel
 - google aramasına bakılacak tekrardan

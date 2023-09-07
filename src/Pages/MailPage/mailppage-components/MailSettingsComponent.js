@@ -7,10 +7,10 @@ import { InputNumber } from 'antd';
 import debounce from "lodash.debounce";
 const MailSettingsComponent = ({  template, setTemplate }) => {
 
-    const [ testData, setTestData ]                 = React.useState( { target:'', subject:'Test Konu Başlığı' } );
+    const [ testData, setTestData ]                 = React.useState( { target:''  } );
     const [ modalVisible, setModalVisible ]         = React.useState( false );
     const [ smtpModalVisible, setSmtpModalVisible ] = React.useState( false );
-    const [ mailSettings, setMailSettings ] = React.useState( { smtpServer:'', port:'', username:'', password:'', } )
+    const [ mailSettings, setMailSettings ] = React.useState( { smtpServer:'', port:'', username:'', password:'', name:'' } )
     const [ mailDateNumber, setMailDataNumber ] = React.useState( -1 );
     const [ mailSettingsFields, setMailSettingsFields ] = React.useState([
         {
@@ -27,6 +27,10 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
         },
         {
             name: ['password'],
+            value: '',
+        },
+        {
+            name: ['name'],
             value: '',
         },
     ]);
@@ -67,7 +71,7 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
 
     React.useEffect( () => {
         getMailDateNumber();
-    }) 
+    }, []) 
 
     React.useEffect(() => {
         return () => {
@@ -150,18 +154,36 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                 Test Maili gönder
             </Button>
 
-            <ButtonComponent disabled={true} type="primary" style={{width:'55%', marginTop:20}} onClick = { async () => { 
+            <ButtonComponent type="primary" style={{width:'55%', marginTop:20}} onClick = { async () => { 
                 
                 const request = await getSMTPConfigAPI( '/options/getconfig' );
 
                 if ( request.status === true ) {
-                    const data = request.data;
-                    setMailSettingsFields( [ 
-                        { name:'username',   value:data.username    }, 
-                        { name:'password',   value:data.password    }, 
-                        { name:'port',       value:data.port        }, 
-                        { name:'smtpServer', value:data.smtpServer  }
-                    ] );
+                    if ( request.data && request.data.username ) {
+                        const data = request.data;
+                        setMailSettingsFields( [ 
+                            { name:'username',   value:data.username    }, 
+                            { name:'password',   value:data.password    }, 
+                            { name:'port',       value:data.port        }, 
+                            { name:'smtpServer', value:data.smtpServer  },
+                            { name:'name'      , value:data.name        }
+                        ]);
+                        setMailSettings( {
+                            name       : data.name,
+                            password   : data.password,
+                            port       : data.port,
+                            smtpServer : data.smtpServer,
+                            username   : data.username
+                        });
+                    }
+                    else{
+                        throwNotification( { 
+                            description:request.message || 'Henüz smtp bilgisi girilmemiş, smtp bilgisi girin',
+                            duration:2,
+                            message:'Bilgi',
+                            type:'info'
+                        } )
+                    }
                     setSmtpModalVisible( true );
                     return;
                 }
@@ -189,10 +211,11 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
 
                         const rawData = JSON.stringify( 
                             { 
-                                smtpServer  :mailSettings.smtpServer, 
-                                username    :mailSettings.username, 
-                                password    :mailSettings.password, 
-                                port        :mailSettings.port 
+                                smtpServer  :mailSettings.smtpServer || '', 
+                                username    :mailSettings.username || '', 
+                                password    :mailSettings.password || '', 
+                                port        :mailSettings.port || '',
+                                name        :mailSettings.name || ''
                             } 
                         );
                         
@@ -264,6 +287,18 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                     >
                         <Input value={ mailSettings.password } onChange={ (e) => { setMailSettings( { ...mailSettings, password:e.currentTarget.value } )  } }/>
                     </Form.Item>
+                    <Form.Item
+                        label="Mailde Görülecek İsim"
+                        name="name"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Mailde Görülecek İsmi Girin',
+                            },
+                        ]}
+                    >
+                        <Input value={ mailSettings.name } onChange={ (e) => { setMailSettings( { ...mailSettings, name:e.currentTarget.value } )  } }/>
+                    </Form.Item>
                     <Form.Item>
                         <ButtonComponent htmlType="submit" type='primary' style={{ backgroundColor:'green' }} > SMTP Bilgilerini Kaydet </ButtonComponent>
                     </Form.Item>
@@ -276,11 +311,10 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                 footer={ [ <Button key="back" onClick={() => { setModalVisible( false ) }} type="primary" danger> Kapat </Button> ] } 
                 onCancel={ () => { setModalVisible( false ) } }
             >
-                <Input value = { testData.subject } placeholder="Test Konu Başlığı" onChange = { (e) => { setTestData( { ...testData, subject:e.currentTarget.value } ) } } style = {{ marginTop:20 }}/>
-                <Input value = { testData.target }  placeholder="Hedef"             onChange = { (e) => { setTestData( { ...testData, target:e.currentTarget.value } ) } }  style = {{ margin:'20px 0' }}/>
+                <Input value = { testData.target }  placeholder="Hedef"  onChange = { (e) => { setTestData( { ...testData, target:e.currentTarget.value } ) } }  style = {{ margin:'20px 0' }}/>
                 <ButtonComponent onClick = { async () => {
 
-                    if ( testData.subject.trim() === '' || testData.target.trim() === '' ) {
+                    if ( testData.target.trim() === '' ) {
                         throwNotification( {
                             duration:5,
                             type:'warning',
@@ -290,7 +324,7 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                         return;
                     }
 
-                    const data = JSON.stringify( { target:testData.target, subject:testData.subject } );
+                    const data = JSON.stringify( { target:testData.target } );
 
                     const request = await sendTestMailAPI( { endpoint:'/mail/test', rawData:data } );
 
