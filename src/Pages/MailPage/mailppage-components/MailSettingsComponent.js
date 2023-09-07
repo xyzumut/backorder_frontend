@@ -4,6 +4,7 @@ import ButtonComponent from "../../../general/ButtonComponent";
 import { addMailTemplateAPI, getMailTargetDateAPI, getSMTPConfigAPI, sendTestMailAPI, setMailTargetDateAPI, setSMTPConfigAPI } from "../../../services";
 import throwNotification from "../../../general/throwNotifiaction";
 import { InputNumber } from 'antd';
+import debounce from "lodash.debounce";
 const MailSettingsComponent = ({  template, setTemplate }) => {
 
     const [ testData, setTestData ]                 = React.useState( { target:'', subject:'Test Konu Başlığı' } );
@@ -30,6 +31,26 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
         },
     ]);
 
+    const debouncedHandle = React.useMemo(() => {
+        return debounce( async (value) => {
+            const temp = mailDateNumber;
+            setMailDataNumber(-1);
+            const request = await setMailTargetDateAPI( { endpoint:'/options/setMailTargetDate', rawData:JSON.stringify({ targetDate:value }) } );
+            if ( request.status && request.status === true ) {
+                setMailDataNumber( value );
+            }
+            else{
+                setMailDataNumber( temp );
+                throwNotification( {
+                    duration:5,
+                    type:'error',
+                    description: request.error,
+                    message:'Hata'
+                } );
+            }
+        }, 750);
+    }, [mailDateNumber]);
+
     const getMailDateNumber = async () => {
         const request = await getMailTargetDateAPI( '/options/getMailTargetDate' );
         if( request.status && request.status === true ){
@@ -41,33 +62,24 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
     }
 
     const handleSetMailDateNumber = async ( val ) => {
-        
-        const temp = mailDateNumber;
-        setMailDataNumber(-1);
-        const request = await setMailTargetDateAPI( { endpoint:'/options/setMailTargetDate', rawData:JSON.stringify({ targetDate:val }) } );
-        if ( request.status && request.status === true ) {
-            setMailDataNumber( val );
-        }
-        else{
-            setMailDataNumber( temp );
-            throwNotification( {
-                duration:5,
-                type:'error',
-                description: request.error,
-                message:'Hata'
-            } );
-        }
-        
+        debouncedHandle(val)
     }
 
     React.useEffect( () => {
         getMailDateNumber();
     }) 
+
+    React.useEffect(() => {
+        return () => {
+            debouncedHandle.cancel();
+        };
+    }, [debouncedHandle]);
+    
     return(
         <div style={{ width:400, height:800, display:'flex', paddingTop:100, paddingLeft:50, flexDirection:'column' }}>
 
             <div style={{ width:400, height:100 }}>
-                Kaç gün öncesine mail atsın? : { mailDateNumber !== -1 ? <InputNumber min={1} max={30} defaultValue={mailDateNumber} onChange={ async ( e ) => { await handleSetMailDateNumber(e) } }/> : <Spin/> }
+                Kaç gün öncesine mail atsın? : { mailDateNumber !== -1 ? <InputNumber /*min={1} max={30}*/ defaultValue={mailDateNumber} onChange={ ( e ) => { handleSetMailDateNumber(e) } }/> : <Spin/> }
             </div>
 
             <Input placeholder="Mail Konusu" value={template.subject} onChange={ (e) => { setTemplate( { ...template, subject:e.currentTarget.value } ) } } maxLength={50} />

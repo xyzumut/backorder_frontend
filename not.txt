@@ -1,15 +1,21 @@
 Öncelikliler
-
-- son eklenen istek worker1 içerisine taşınacak
-- kaç gün öncesi inputu düzeltilecek
-- mail gönder butonu kuyruğa atacak
 - statü düzgün çalışmıyor ona bakılacak
+    > test edilecek
+    > none için düzenlemeler yapılacak
+- excel
 
 Düşük Öncelikliler
-- excel
-- domain onaylama ve mail gönderme işlemlerini tekrar ekleyeceğim 
 - mail ayarlarını dinamik alacağım
 - tld mevzu bakılacak
+- domain eklerken yeni tarih bilgileride eklenecek
+- [1]
+
+bitenler:
+- son eklenen istek worker1 içerisine taşınacak
+- kaç gün öncesi inputu düzeltilecek
+- domain onaylama ve mail gönderme işlemlerini tekrar ekleyeceğim 
+- mail gönder butonu kuyruğa atacak
+- internet_results tablosu çözülecek
 
 -----------------------------------------------------------------------------------
 (pending_approve kısmına kadar yaptım)

@@ -78,25 +78,13 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
                 if ( item.key !== domainID ) {
                     return item;
                 }
-                return { ...item, approved:!item.approved };
+
+                return { ...item, status:request.data};
             } ) );
-            /*
-            if ( meta.pagePerSize > 10 ) {
-                setData( data.map( item => {
-                    if ( item.key !== domainID ) {
-                        return item;
-                    }
-                    return { ...item, approved:true };
-                } ) );
-            }
-            else{
-                setQuery( { ...query } )
-            }
-            */
             throwNotification( {
-                duration:2,
+                duration:5,
                 type:'success',
-                description:'Onay Değiştirme İşlemi Başarılı',
+                description:request.message,
                 message:'Başarılı'
             } );
             setLoading( false );
@@ -141,6 +129,31 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
         setTableModalIsVisible( true );
     }
 
+    const StatusBadge = ( {status} ) => {
+        console.log( status );
+        let element = <Badge status='error' text='Hata'/>;
+        switch ( status ) {
+            case 'pending_queue':
+                element = <Badge status='default' text='Bekliyor'/>;
+                break;
+            case 'in_queue':
+                element = <Badge status='processing' text='Kuyrukta'/>;
+                break;
+            case 'pending_approve':
+                element = <Badge color='orange' text='Onay Bekliyor'/>;
+                break;
+            case 'pending_mail':
+                element = <Badge color='geekblue' text='Mail Bekliyor'/>;
+                break;
+            case 'completed':
+                element = <Badge status='success' text='Tamamlandı'/>;
+                break;
+            default:
+                break;
+        }
+        return element;
+    }
+
     const columns = [
         {
             title: () => <span style={{ cursor:'pointer', color: query.sortBy === 'id' ? ( query.orderBy === 'ASC' ? 'green' : 'red' ) : 'black'}} onClick={ () => {
@@ -178,7 +191,8 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             render: ( props ) => {
                 return(
                     <Switch 
-                        checked = { props.approved }
+                        disabled = { props.status   === 'pending_queue' || props.status   === 'in_queue'  }
+                        checked  = { props.status === 'pending_mail'  || props.status === 'completed' }
                         onChange = { async () => {
                             await domainApprovedToggle( props.key );
                         }}
@@ -193,8 +207,7 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             key: 'status',
             width:150,
             render: ( props ) => {
-                // console.log( 'props : ', props );
-                return( props.status ? <Badge status='success' text="Tamamlandı" /> : <Badge status='processing' text="Kuyrukta" /> ) 
+                return <StatusBadge key={props.key} status={props.status} /> 
             },
         },
         {
