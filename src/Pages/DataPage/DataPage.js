@@ -11,7 +11,7 @@ const DataPage = () => {
     const params = useParams();
 
     const [ loading, setLoading ] = React.useState( false );
-    const [ data, setData ]       = React.useState( { domain:'', dropDate:'', status:false, approved:false, id:-1, govTrResult:[], infos:[] } );
+    const [ data, setData ]       = React.useState( { domain:'', dropDate:'', expiryDate:'', status:'', registerDate:'', id:-1, govTrResult:[], infos:[] } );
 
     const getData = React.useCallback( async () => {
         setLoading( true );
@@ -45,7 +45,7 @@ const DataPage = () => {
     const handleApproved = async () => {
         const request = await domainApprovedToggleAPI( '/domain/toggle-approved/' + data.id );
         if ( request.status && request.status === true ) {
-            setData( { ...data, approved:!data.approved } ); 
+            setData( { ...data, status:request.data } ); 
             throwNotification( {
                 duration:2,
                 type:'success',
@@ -70,6 +70,26 @@ const DataPage = () => {
     React.useEffect( () => {
         console.log( data.approved )
     }, [data])
+
+    const setStatusLabel = ( text ) => {
+        switch (text){
+            case 'pending_queue':
+                return 'Bekliyor';
+            case 'in_queue':
+                return 'Kuyrukta';
+            case 'no-info':
+                return 'Bilgi Bulunamadı';
+            case 'pending_mail':
+                return 'Mail Bekliyor';
+            case 'completed':
+                return 'Tamamlandı';
+            case 'pending_approve':
+                return 'Onay Bekliyor';
+            default:
+                return text;
+        }
+    }
+
     return (
         <motion.div
             initial = {{ opacity:0, translateY:100  }}
@@ -83,8 +103,10 @@ const DataPage = () => {
                     <div style={{ width:700, height:700, display:'flex', flexDirection:'column' }}>
                         <h3 style={{ margin:'5px 0' }}> Domain : { data.domain } </h3>
                         <h4 style={{ margin:'5px 0' }}> Düşüş Tarihi : { data.dropDate } </h4>
-                        <h4 style={{ margin:'5px 0' }}> Durumu : Kuyrukta </h4>
-                        <h4 style={{ margin:'5px 0' }}> Onay : <Switch  checked = { data.approved } onChange = { async () => { await handleApproved(); } } /> </h4>
+                        <h4 style={{ margin:'5px 0' }}> Bitiş Tarihi : { data.expiryDate } </h4>
+                        <h4 style={{ margin:'5px 0' }}> Kayıt Tarihi : { data.registerDate } </h4>
+                        <h4 style={{ margin:'5px 0' }}> Durumu : {setStatusLabel(data.status)} </h4>
+                        <h4 style={{ margin:'5px 0' }}> Onay : <Switch disabled = { data.status   === 'pending_queue' || data.status   === 'in_queue' || data.status === 'no-info'  }  checked  = { data.status === 'pending_mail'  || data.status === 'completed' } onChange = { async () => { await handleApproved(); } } /> </h4>
                         <h3 style={{ margin:'5px 0' }}> E-Ticaret Bilgi Formu Sonuçları </h3>
                         <Table 
                             scroll  = { { y:550 } }

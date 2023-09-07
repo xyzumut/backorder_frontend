@@ -1,14 +1,12 @@
 Öncelikliler
-- statü düzgün çalışmıyor ona bakılacak
-    > test edilecek
-    > none için düzenlemeler yapılacak
+- domainin kendi sayfasında çoklu seçme, filtreleme özellikleri getireceğim(1.5 saat)
 - excel
 
 Düşük Öncelikliler
 - mail ayarlarını dinamik alacağım
 - tld mevzu bakılacak
-- domain eklerken yeni tarih bilgileride eklenecek
-- [1]
+- ana tablodaki filtreler düzenlenecek ve backende geçilecek
+- statü sıkıntılı
 
 bitenler:
 - son eklenen istek worker1 içerisine taşınacak
@@ -16,6 +14,10 @@ bitenler:
 - domain onaylama ve mail gönderme işlemlerini tekrar ekleyeceğim 
 - mail gönder butonu kuyruğa atacak
 - internet_results tablosu çözülecek
+- domain özel sayfasında yeni 2 tarih gösterilecek
+- kısa kod mail dönüşümlerine yeni 2 tarih eklendi
+- onay durumu sıralaması çalışmıyor(40 dakika)
+
 
 -----------------------------------------------------------------------------------
 (pending_approve kısmına kadar yaptım)

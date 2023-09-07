@@ -8,10 +8,10 @@ const SelectFilterComponent = () => {
 
     const [ width, setWidth ] = React.useState( 400 )
     const options = [
-        { value:'1', label:'Onaylananları Getir' },
-        { value:'2', label:'Onay Bekleyenleri Getir' },
-        { value:'4', label:'Kuyruktakileri Getir' },
-        { value:'8', label:'Kontrol edilenleri getir' },
+        { value:'1', label:'Onay Bekleyenler' },
+        { value:'2', label:'Mail Bekleyenler' },
+        { value:'4', label:'Kuyruktakiler' },
+        { value:'8', label:'Tamamlananlar' },
     ];
 
     const handleChange = ( value ) => {

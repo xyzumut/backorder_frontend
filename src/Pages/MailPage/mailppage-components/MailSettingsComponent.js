@@ -138,6 +138,12 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                 <div style={{ color:'gray' }}>
                     Domainin Düşüş tarihi : <span style={{ color:'black', fontWeight:800, cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %tarih% </span>
                 </div>
+                <div style={{ color:'gray' }}>
+                    Domainin Bitiş tarihi : <span style={{ color:'black', fontWeight:800, cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %bitis% </span>
+                </div>
+                <div style={{ color:'gray' }}>
+                    Domainin Kayıt tarihi : <span style={{ color:'black', fontWeight:800, cursor:'pointer' }} onClick={ ( e ) => { navigator.clipboard.writeText( e.currentTarget.innerText ) } }> %kayit% </span>
+                </div>
             </div>
 
             <Button type="primary" htmlType="submit" onClick = { () => { setModalVisible( true ) } } style={{width:'50%'}}>

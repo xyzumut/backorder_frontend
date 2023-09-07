@@ -148,6 +148,9 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             case 'completed':
                 element = <Badge status='success' text='Tamamlandı'/>;
                 break;
+            case 'no-info':
+                element = <Badge status='default' text='Bilgi Bulunamadı'/>;
+                break;
             default:
                 break;
         }
@@ -182,10 +185,8 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             align:'center'
         },
         {
-            title: () => <span style={{ cursor:'pointer', color: query.sortBy === 'approved' ? ( query.orderBy === 'ASC' ? 'red' : 'green' ) : 'black'}} onClick={ () => {
-                setQuery( { ...query, sortBy:'approved', orderBy: query.sortBy === 'approved' ? ( query.orderBy === 'ASC' ? 'DESC' : 'ASC' ) : query.orderBy } );
-            } }>Onay Durumu</span>,
-            key: 'approved',
+            title: 'Onay',
+            key: 'status',
             width:150,
             align:'center',
             render: ( props ) => {

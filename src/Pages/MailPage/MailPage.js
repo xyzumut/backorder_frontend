@@ -9,11 +9,11 @@ const MailPage = () => {
 
     const [ template, setTemplate ] = React.useState( {
         subject         :'',
-        mailHeader      :'Mail Başlığı',
-        mailContent     :'Mail İçeriği',
-        mailButtonText  :'Buton Yazısı',
-        mailFooter1     :'Footer Yazısı 1',
-        mailFooter2     :'Footer Yazısı 2',
+        mailHeader      :'',
+        mailContent     :'',
+        mailButtonText  :'',
+        mailFooter1     :'',
+        mailFooter2     :'',
     } )
 
     const getData = async () => {
@@ -38,7 +38,7 @@ const MailPage = () => {
             throwNotification( {
                 duration:5,
                 type:'error',
-                description: request.message ? request.message : 'Mail şablonu getirilirken bir hata oluştu',
+                description: 'Mail şablonu getirilirken bir hata oluştu',
                 message:'Hata'
             } );
             setTemplate( {
