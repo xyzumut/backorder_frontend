@@ -228,6 +228,20 @@ const sendMailForcedAPI = async ( endpoint ) => {
     }
 }
 
+const deleteInfoMultipleAPI = async ( { endpoint, rawData } ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, { 
+            method:'DELETE',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return { status:'error', error:error };        
+    }
+}
+
 export{
     getDomainWithInfoAPI,
     deleteInfoAPI,
@@ -246,5 +260,6 @@ export{
     getSMTPConfigAPI,
     setMailTargetDateAPI,
     getMailTargetDateAPI,
-    sendMailForcedAPI
+    sendMailForcedAPI,
+    deleteInfoMultipleAPI
 }

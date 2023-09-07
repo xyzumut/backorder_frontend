@@ -1,12 +1,8 @@
 Öncelikliler
-- domainin kendi sayfasında çoklu seçme, filtreleme özellikleri getireceğim(1.5 saat)
-- excel
-
-Düşük Öncelikliler
 - mail ayarlarını dinamik alacağım
 - tld mevzu bakılacak
-- ana tablodaki filtreler düzenlenecek ve backende geçilecek
-- statü sıkıntılı
+- excel
+- google aramasına bakılacak tekrardan
 
 bitenler:
 - son eklenen istek worker1 içerisine taşınacak
@@ -16,7 +12,10 @@ bitenler:
 - internet_results tablosu çözülecek
 - domain özel sayfasında yeni 2 tarih gösterilecek
 - kısa kod mail dönüşümlerine yeni 2 tarih eklendi
-- onay durumu sıralaması çalışmıyor(40 dakika)
+- onay durumu sıralaması düzeltildi
+- ana tablodaki filtreler düzenlendi ve backende geçildi
+- statü bu sefer doğru çalışıyor
+- domainin kendi sayfasında çoklu seçme, filtreleme özellikleri ekleyeceğim
 
 
 -----------------------------------------------------------------------------------

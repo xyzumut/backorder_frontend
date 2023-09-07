@@ -8,9 +8,9 @@ import throwNotification from '../../../general/throwNotifiaction';
 import TableModal from './TableComponentsSubComponents/TableModal';
 import ButtonComponent from '../../../general/ButtonComponent';
 
-const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
+const TableComponent = ( { setSelected, loading, setLoading } ) => {
     
-    const { data, setData, query, setQuery, meta, setMeta, initialQuery } = useHomePage()
+    const { data, setData, query, setQuery, meta } = useHomePage()
 
     const [ tableModalData, setTableModalData ]           = React.useState( [] );
     const [ tableModalIsVisible, setTableModalIsVisible ] = React.useState( false );
@@ -192,7 +192,7 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             render: ( props ) => {
                 return(
                     <Switch 
-                        disabled = { props.status   === 'pending_queue' || props.status   === 'in_queue'  }
+                        disabled = { props.status   === 'pending_queue' || props.status   === 'in_queue' || props.status   === 'no-info' }
                         checked  = { props.status === 'pending_mail'  || props.status === 'completed' }
                         onChange = { async () => {
                             await domainApprovedToggle( props.key );
@@ -226,23 +226,8 @@ const TableComponent = ( { selected, setSelected, loading, setLoading } ) => {
             width:150,
             render: ( props ) => {
                 const content = () => {
-                    console.log( 'durum : ', props.approved )
                     return( 
                         <div>
-
-                            {/* <ButtonComponent type="primary" style={{ marginLeft:10, backgroundColor:'green' }} onClick={ async () => { await domainApprovedToggle( props.key ) } } >
-                                {
-                                    props.approved ? 'Onayı Geri Al' : 'Onayla'
-                                }
-                            </ButtonComponent>
-                            
-                            <Switch 
-                                checked = { props.approved }
-                                onChange = { async () => {
-                                    await domainApprovedToggle( props.key );
-                                }}
-                            /> */}
-
                             <ButtonComponent type="primary" style={{ marginLeft:10 }} onClick = { async () => { await sendMailForced( props.key ) } } >
                                 Mail Gönder
                             </ButtonComponent>

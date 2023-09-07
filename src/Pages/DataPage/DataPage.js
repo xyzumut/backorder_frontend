@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { deleteInfoAPI, domainApprovedToggleAPI, getDomainDataAPI } from "../../services";
+import { domainApprovedToggleAPI, getDomainDataAPI } from "../../services";
 import throwNotification from "../../general/throwNotifiaction";
-import { Spin, Table, Switch } from "antd";
-import ButtonComponent from "../../general/ButtonComponent";
+import { Spin, Switch } from "antd";
+import GovTrTableComponent from "./datapage-components/GovTrTableComponent";
+import InfosTableComponent from "./datapage-components/InfosTableComponent";
 
 const DataPage = () => {
 
@@ -12,7 +13,7 @@ const DataPage = () => {
 
     const [ loading, setLoading ] = React.useState( false );
     const [ data, setData ]       = React.useState( { domain:'', dropDate:'', expiryDate:'', status:'', registerDate:'', id:-1, govTrResult:[], infos:[] } );
-
+    const [ selectedInfos, setSelectedInfos ] = React.useState([]);
     const getData = React.useCallback( async () => {
         setLoading( true );
         const request = await getDomainDataAPI( '/domain/get/'+params.domain );
@@ -67,10 +68,6 @@ const DataPage = () => {
         getData();
     }, [getData]);
 
-    React.useEffect( () => {
-        console.log( data.approved )
-    }, [data])
-
     const setStatusLabel = ( text ) => {
         switch (text){
             case 'pending_queue':
@@ -90,6 +87,9 @@ const DataPage = () => {
         }
     }
 
+    React.useEffect( () => {
+        console.log(selectedInfos)// direkt id'ler var
+    }, [selectedInfos]);
     return (
         <motion.div
             initial = {{ opacity:0, translateY:100  }}
@@ -108,83 +108,11 @@ const DataPage = () => {
                         <h4 style={{ margin:'5px 0' }}> Durumu : {setStatusLabel(data.status)} </h4>
                         <h4 style={{ margin:'5px 0' }}> Onay : <Switch disabled = { data.status   === 'pending_queue' || data.status   === 'in_queue' || data.status === 'no-info'  }  checked  = { data.status === 'pending_mail'  || data.status === 'completed' } onChange = { async () => { await handleApproved(); } } /> </h4>
                         <h3 style={{ margin:'5px 0' }}> E-Ticaret Bilgi Formu Sonuçları </h3>
-                        <Table 
-                            scroll  = { { y:550 } }
-                            style   = { { width:700 } }
-                            columns = { [ 
-                                {
-                                    title: 'Adres',
-                                    dataIndex: 'siteAdress',
-                                    align:'center',
-                                },
-                                {
-                                    title:'Ünvan',
-                                    dataIndex: 'companyTitle',
-                                    align:'center'
-                                },
-                                {
-                                    title:'VkNo',
-                                    dataIndex: 'vkNo',
-                                    align:'center'
-                                },
-                                {
-                                    title:'Mersis',
-                                    dataIndex: 'mersisNo',
-                                    align:'center'
-                                }
-                            ]}
-                            dataSource={ data.govTrResult || [] }
-                        />
+                        <GovTrTableComponent data={ data } />
                     </div>
                     <div style={{ width:800, height:700, display:'flex', flexDirection:'column', paddingLeft:50 }}>
                         <h3 style={{ margin:'5px 0 10px 0' }}> Bulunan Bilgiler </h3>
-                        <Table 
-                            scroll  = { { y:550 } }
-                            style   = { { width:750 } }
-                            columns = { [ 
-                                {
-                                    title: 'Bilgi',
-                                    dataIndex: 'information',
-                                    align:'center',
-                                },
-                                {
-                                    title:'Kaynak',
-                                    key: 'informationSource',
-                                    align:'center',
-                                    render:( props ) => <a target="_blank" rel="noreferrer" href={'//'+props.informationSource}>{props.informationSource}</a>
-                                },
-                                {
-                                    title:'#',
-                                    key: 'key',
-                                    align:'center',
-                                    render : ( props ) => {
-                                        return <ButtonComponent onClick = { async () => {
-                                            const request = await deleteInfoAPI( '/information/delete/'+props.key );
-                                            if ( request.status && request.status === true ) {
-                                                throwNotification( {
-                                                    duration:2,
-                                                    type:'success',
-                                                    description: request.message,
-                                                    message:'Başarılı'
-                                                } );
-                                                setData( { ...data, infos:data.infos.filter( info => info.key !== props.key ) } );
-                                            }
-                                            else{
-                                                throwNotification( {
-                                                    duration:4,
-                                                    type:'error',
-                                                    description: request.message || 'Silme İşlemi sırasında bir hata oluştu',
-                                                    message:'Hata'
-                                                } );
-                                            }
-
-                                        } }> Sil </ButtonComponent>
-                                    }
-                                }
-                            ]}
-                            dataSource={ data.infos || [] }
-                            pagination = {{ defaultPageSize:50 }}
-                        />
+                        <InfosTableComponent data={data} setData={setData} setSelectedInfos={setSelectedInfos} selectedInfos={selectedInfos} />
                     </div>
                 </>
                 :

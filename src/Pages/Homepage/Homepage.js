@@ -19,7 +19,7 @@ const Homepage = () => {
     const [ selectActionState, setSelectActionState ]   = React.useState( '' );
     const [ isModalOpen, setIsModalOpen ]               = React.useState(false);
 
-    const { query, setQuery, data, setData, setMeta, meta } = useHomePage()
+    const { query, setQuery, setData, setMeta, meta } = useHomePage()
 
     const loadData = React.useCallback( async () => {
         setLoading( true );
@@ -28,7 +28,7 @@ const Homepage = () => {
         setData( response.data );
         setMeta( response.meta )
         setLoading( false );
-    }, [ query ])
+    }, [ query, setData, setMeta ])
 
     const handleRangePicker = ( val ) => {
         if ( val === null ) {
@@ -115,7 +115,7 @@ const Homepage = () => {
                         <SearchComponent loading = { false }  width = { '90%' } /> 
                         { !loading && <div style={{ backgroundColor:'#1677ff', padding:5, borderRadius:5, color:'white' }}> { meta && meta.pagePerSize ? meta.pagePerSize : 0 }/{ meta && meta.filteredDataCount ? meta.filteredDataCount : 0} </div> }  
                     </div>
-                    { !loading ? <TableComponent  loading = { loading } setLoading={ setLoading } selected = { selected } setSelected = { setSelected }/> : <Spin/> }
+                    { !loading ? <TableComponent  loading = { loading } setLoading={ setLoading } setSelected = { setSelected }/> : <Spin/> }
                     <FloatButton icon={ <PlusOutlined/>} onClick={ () => { setIsModalOpen( true ) } } />  
                     <ModalComponent isModalOpen={isModalOpen} setIsModalOpen={ setIsModalOpen }/>
                 </div>
