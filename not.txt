@@ -1,37 +1,12 @@
-Öncelikliler
-- short code mevzusu halledilecek
-- tld mevzu bakılacak
-- excel
-- google aramasına bakılacak tekrardan
-
-bitenler:
-- son eklenen istek worker1 içerisine taşınacak
-- kaç gün öncesi inputu düzeltilecek
-- domain onaylama ve mail gönderme işlemlerini tekrar ekleyeceğim 
-- mail gönder butonu kuyruğa atacak
-- internet_results tablosu çözülecek
-- domain özel sayfasında yeni 2 tarih gösterilecek
-- kısa kod mail dönüşümlerine yeni 2 tarih eklendi
-- onay durumu sıralaması düzeltildi
-- ana tablodaki filtreler düzenlendi ve backende geçildi
-- statü bu sefer doğru çalışıyor
-- domainin kendi sayfasında çoklu seçme, filtreleme özellikleri ekleyeceğim
+kaç gün önce mail atılmasını ( çoklu 3, 5, 7 gibi) değiştir, drop date'ine göre göre
+test maili kısmını kaldır test modu aç
 
 
 -----------------------------------------------------------------------------------
-(pending_approve kısmına kadar yaptım)
+Statüler:
+Bilgi Yok -> no-info
 Bekliyor -> pending_queue
 Kuyrukta -> in_queue
 Onay Bekliyor -> pending_approve
 Mail Bekliyor -> pending_mail
 Tamamlandı -> completed
-
-
--> getDomainsWithInformations, /domain/getDomainWithInformation backend düzeltildi
--> add, /domain/add aynı kaldı
--> domainAddToQueue metodu güncellendi
--> /domain/toggle-approved/ artık çalışmayacak, (approveToggleDomain, changeApprovedToggle) metotları kaldırılacak
--> getDomain, /domain/get/ güncellendi
-
-yeni worker1 mesajı:
-$message = new Worker1Message( [ 'domain' => $tempDomain, 'drop_date' => $tempDropDate, 'expiry_date' => $tempExpiryDate, 'register_date' => $tempRegisterDate ] );

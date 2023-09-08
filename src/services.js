@@ -192,31 +192,6 @@ const getSMTPConfigAPI = async ( endpoint ) => {
     }
 }
 
-const setMailTargetDateAPI = async ( { endpoint, rawData } ) => {
-    try {
-        const request   = await fetch( BASE_URL+endpoint, {
-            method:'POST',
-            body:rawData
-        });
-        const response  = await request.json();
-        return response; 
-    } 
-    catch ( error ) {
-        return error;        
-    }
-}
-
-const getMailTargetDateAPI = async ( endpoint ) => {
-    try {
-        const request   = await fetch( BASE_URL+endpoint );
-        const response  = await request.json();
-        return response; 
-    } 
-    catch ( error ) {
-        return error;        
-    }
-}
-
 const sendMailForcedAPI = async ( endpoint ) => {
     try {
         const request   = await fetch( BASE_URL+endpoint );
@@ -232,6 +207,31 @@ const deleteInfoMultipleAPI = async ( { endpoint, rawData } ) => {
     try {
         const request   = await fetch( BASE_URL+endpoint, { 
             method:'DELETE',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return { status:'error', error:error };        
+    }
+}
+
+const getTestModeAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
+    }
+}
+
+const setTestModeAPI = async ( { endpoint, rawData } ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint, { 
+            method:'PATCH',
             body:rawData
         });
         const response  = await request.json();
@@ -258,8 +258,8 @@ export{
     getGoogleFieldsAPI,
     setSMTPConfigAPI,
     getSMTPConfigAPI,
-    setMailTargetDateAPI,
-    getMailTargetDateAPI,
     sendMailForcedAPI,
-    deleteInfoMultipleAPI
+    deleteInfoMultipleAPI,
+    getTestModeAPI,
+    setTestModeAPI
 }
