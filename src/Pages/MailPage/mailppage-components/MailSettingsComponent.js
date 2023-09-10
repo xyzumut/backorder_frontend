@@ -2,14 +2,12 @@ import { motion } from "framer-motion";
 import { Input, Button, Modal, Form, Spin, Badge } from "antd";
 import React from "react";
 import ButtonComponent from "../../../general/ButtonComponent";
-import { addMailTemplateAPI, getSMTPConfigAPI, sendTestMailAPI, setSMTPConfigAPI, getTestModeAPI, setTestModeAPI } from "../../../services";
+import { addMailTemplateAPI, getSMTPConfigAPI, sendTestMailAPI, setSMTPConfigAPI, getTestModeAPI, testModeToggleAPI, setMailTimerAPI, getMailTimerAPI } from "../../../services";
 import throwNotification from "../../../general/throwNotifiaction";
-import { InputNumber } from 'antd';
-import debounce from "lodash.debounce";
 
 const MailSettingsComponent = ({  template, setTemplate }) => {
 
-    const [ loading, setLoading ] = React.useState( true );
+    const [ mailTimer, setMailTimer ]                   = React.useState('');
     const [ smtpModalVisible, setSmtpModalVisible ]     = React.useState( false );
     const [ mailSettings, setMailSettings ]             = React.useState( { smtpServer:'', port:'', username:'', password:'', name:'' } );
     const [ testData, setTestData ]                     = React.useState( { testModeIsActive:false, testModeTarget:'' } );
@@ -36,12 +34,52 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
         },
     ] );
 
-
-    const handleSetOpenTestMode = async () => {
-        request = await setTestModeAPI( { endpoint:'options/setTestOptions', rawData:JSON.stringify( {} ) } )
+    const handleSetMailTimer = async () => {
+        const timerArray = mailTimer.split( ',' ).map( item => Number(item.trim()) );
+        const request = await setMailTimerAPI( { endpoint:'/options/setTestMailTimer', rawData:JSON.stringify( { timerArray:timerArray } ) } ) ;
+        if ( request.status ) {
+            throwNotification( {
+                duration:2,
+                type: 'success',
+                description: request.message || 'Mail Aralıkları kaydetme işlemi Başarılı',
+                message:'Başarı'
+            });
+        }
+        else{
+            throwNotification( {
+                duration:4,
+                type: 'error',
+                description: request.message || 'Mail Aralıkları kaydetme işlemi sırasında hata oluştu',
+                message:'Hata'
+            });
+        }
     }
 
-    const handleGetTestMode = React.useCallback( async () => {
+    const handleSetOpenTestMode = async (active) => {
+
+        const rawData = JSON.stringify( { testModeIsActive:active ? 1 : 0, testModeTarget:testData.testModeTarget } );
+        const request = await testModeToggleAPI( { endpoint:'/options/setTestOptions', rawData:rawData } );
+        console.log( request.data.test_mode );
+        if ( request.status && request.status === true ) {
+            setTestData({ testModeIsActive:active, testModeTarget:testData.testModeTarget });
+            throwNotification( {
+                duration:3,
+                type: 'success',
+                description:'Test Modu güncellendi',
+                message:'Başarı'
+            });
+        }
+        else{
+            throwNotification( {
+                duration:3,
+                type: 'error',
+                description: request.message || 'Test Modu ile alakalı bir hata oluştu',
+                message:'Hata'
+            });
+        }
+    }
+
+    const getTestMode = React.useCallback( async () => {
         const request = await getTestModeAPI('/options/getTestOptions');
         if ( request && request.status === true ) {
             setTestData( { testModeTarget:request.data.test_mode_target, testModeIsActive:Number(request.data.test_mode) === 1 ? true : false } );
@@ -56,32 +94,36 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
         }
     }, [])
 
-    const debouncedHandle = React.useMemo(() => {
-        return debounce( async (value) => {
-            setTestData( { ...testData, testModeTarget:value } );
-            console.log( value )
-        }, 750);
-    }, [testData]);
-
-    const handleTestTargetInput = async ( val ) => {
-        debouncedHandle(val)
+    const getMailTimer = async () => {
+        const request = await getMailTimerAPI('/options/getTestMailTimer');
+        if ( request && request.status === true ) {
+            setMailTimer( request.data );
+        }
+        else{
+            throwNotification( {
+                duration:3,
+                type: 'danger',
+                description: 'Mail Aralıkları Getirilirken Hata Oluştu',
+                message:'Hata'
+            } );
+        }
     }
 
-    React.useEffect(() => {
-        return () => {
-            debouncedHandle.cancel();
-        };
-    }, [debouncedHandle]);
-    
     React.useEffect( () => {
-        handleGetTestMode();
-    }, [handleGetTestMode])
+        getTestMode();
+    }, [getTestMode])
+
+
+    React.useEffect( () => {
+        getMailTimer();
+    }, [])
 
     return(
         <div style={{ width:400, height:800, display:'flex', paddingTop:100, paddingLeft:50, flexDirection:'column' }}>
 
             <div style={{ width:400, height:100 }}>
-                Kaç gün öncesine mail atsın? : { true ?  <InputNumber/> : <Spin/> }
+                Mail Atma Aralıkları: <Input style={{width:200}} value={mailTimer} onChange={(e) => { setMailTimer(e.currentTarget.value) }}/> 
+                <ButtonComponent type="primary" style={{backgroundColor:'green', marginTop:20}} onClick={ async () => { await handleSetMailTimer() } }> Aralıkları Kaydet </ButtonComponent>
             </div>
 
             <Input placeholder="Mail Konusu" value={template.subject} onChange={ (e) => { setTemplate( { ...template, subject:e.currentTarget.value } ) } } maxLength={50} />
@@ -191,14 +233,15 @@ const MailSettingsComponent = ({  template, setTemplate }) => {
                 SMTP Bilgilerini Göster
             </ButtonComponent>
 
-            <ButtonComponent style={{ marginTop:20, marginBottom:20, width:'50%', borderColor:(testData.testModeIsActive ? 'green' : 'red')  }} onClick = { async () => { await handleSetOpenTestMode() } } >
+            <ButtonComponent style={{ marginTop:20, marginBottom:20, width:'50%', borderColor:(testData.testModeIsActive ? 'green' : 'red')  }} onClick = { async (e) => { await handleSetOpenTestMode( !testData.testModeIsActive ) } } >
                 <Badge color={ testData.testModeIsActive ? 'green' : 'red' } text={ testData.testModeIsActive ? 'Test Modu Aktif' : 'Test Modu Pasif' } style={{ color:testData.testModeIsActive ? 'green' : 'red' }}/>
             </ButtonComponent>
             { 
                 testData.testModeIsActive 
                 && 
                 <motion.div initial = {{ opacity:0 }} animate = {{ opacity:1 }}> 
-                    <Input placeholder="Hedef Test Maili" onChange={ async (e) => { await handleTestTargetInput( e.currentTarget.value ) } } /> 
+                    <Input placeholder="Hedef Test Maili" value={testData.testModeTarget} onChange={ async (e) => { setTestData( { testModeIsActive:testData.testModeIsActive, testModeTarget:e.currentTarget.value } ) } } /> 
+                    <ButtonComponent style={{ marginTop:20 }} type="primary" onClick= { async (e) => { await handleSetOpenTestMode( testData.testModeIsActive ) } }> Kaydet </ButtonComponent>
                 </motion.div> 
             }
             <Modal 

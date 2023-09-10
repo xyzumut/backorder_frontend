@@ -228,9 +228,10 @@ const getTestModeAPI = async ( endpoint ) => {
     }
 }
 
-const setTestModeAPI = async ( { endpoint, rawData } ) => {
+const testModeToggleAPI = async ( { endpoint, rawData } ) => {
+    console.log( BASE_URL+endpoint );
     try {
-        const request   = await fetch( BASE_URL+endpoint, { 
+        const request   = await fetch( BASE_URL+endpoint, {
             method:'PATCH',
             body:rawData
         });
@@ -239,6 +240,32 @@ const setTestModeAPI = async ( { endpoint, rawData } ) => {
     } 
     catch ( error ) {
         return { status:'error', error:error };        
+    }
+}
+
+const setMailTimerAPI = async ( { endpoint, rawData } ) => {
+    console.log( BASE_URL+endpoint );
+    try {
+        const request   = await fetch( BASE_URL+endpoint, {
+            method:'PATCH',
+            body:rawData
+        });
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return { status:'error', error:error };        
+    }
+}
+
+const getMailTimerAPI = async ( endpoint ) => {
+    try {
+        const request   = await fetch( BASE_URL+endpoint );
+        const response  = await request.json();
+        return response; 
+    } 
+    catch ( error ) {
+        return error;        
     }
 }
 
@@ -261,5 +288,7 @@ export{
     sendMailForcedAPI,
     deleteInfoMultipleAPI,
     getTestModeAPI,
-    setTestModeAPI
+    testModeToggleAPI,
+    setMailTimerAPI,
+    getMailTimerAPI
 }
